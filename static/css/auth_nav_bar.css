@@ -1,0 +1,28 @@
+.custom-dropdown-menu-auth-mobile {
+    --bs-dropdown-min-width: 6.5rem;
+    inset: 8px 0 auto auto !important;
+
+}
+.auth-item {
+    display: flex!important;
+    justify-content: center;
+    align-items: end;
+}
+
+.custom-nav-item {
+    display:inline-block;
+}
+
+#authDesktop {
+    margin-left: 3rem;
+    display: none;
+}
+
+#authMobile {
+    margin-left: 1rem;
+}
+
+/*убрать треугольник у заглавия выпадающего списка*/
+.dropdown-toggle::after {
+    display:none
+}
