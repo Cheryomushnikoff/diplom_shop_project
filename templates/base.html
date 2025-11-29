@@ -1,0 +1,137 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}{% endblock %}</title>
+{#        <link rel="icon" href="{% static 'image/favicon.png' %}" type="image/x-icon">#}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="{% static 'css/core.css' %}">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
+        <script src="{% static 'js/core.js' %}"></script>
+    </head>
+    <body onclick="removeSearchMenu()">
+    <header>
+        <ul class="nav justify-content-center custom-nav mt-3 mb-5">
+            <li class="nav-item">
+                <a id="logo" class="nav-link active custom-link" aria-current="page" href="{% url 'store:main_page' %}">
+                    <i class="bi bi-disc"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link custom-link" href="#">Каталог</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle custom-link" data-bs-toggle="dropdown" href="#" role="button"
+                   aria-expanded="false">Категории<i class="bi bi-three-dots-vertical"></i></a>
+{#                <ul class="dropdown-menu custom-dropdown-menu-catalog">#}
+{#                    {% for cat in categories %}#}
+{#                        <li>#}
+{#                            <a class="dropdown-item cat-item" href="{% url 'store:catalog_category' cat.slug %}">#}
+{#                                <span>{{ cat.name }}</span>#}
+{#                                <img#}
+{#                                        src=""#}
+{#                                        alt=""#}
+{#                                        class="category-img"#}
+{#                                >#}
+{#                            </a>#}
+{#                        </li>#}
+{#                    {% endfor %}#}
+{#                </ul>#}
+            </li>
+            <form id='searchForm' class="d-flex form-search" role="search" onsubmit="return false"
+                  action="#">
+                <div id="containerMainSearch">
+                    <input
+                            {% if request.GET %}
+                                value="{{ request.GET.name }}"
+                            {% endif %}
+                                name="name"
+                                class="form-control me-2 main-search"
+                                type="search"
+                                placeholder="Что интересует?..."
+                                aria-label="Search"
+                                onclick="stopProp(event);"
+                                onkeydown="submitSearch(event)"
+                    />
+                </div>
+                <button class="btn-search" type="submit" onclick="getSearchMenu(event)">
+                    <i class="bi bi-search ma"></i>
+                </button>
+            </form>
+            <li class="nav-item">
+                <a class="nav-link custom-link" href="#"><i class="bi bi-cart"></i></a>
+            </li>
+            {% if request.user.is_authenticated %}
+                <li id="authMobile" class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle custom-link" data-bs-toggle="dropdown" href="#" role="button"
+                       aria-expanded="false">
+                        <i class="bi bi-person-circle"></i>
+                    </a>
+                    <ul class="dropdown-menu custom-dropdown-menu-auth-mobile">
+                        <li>
+                            <a class="dropdown-item auth-item" title="{{ request.user.username }}">
+                            {{ request.user.username|slice:":15"}}
+                            {% if request.user.username|length > 15 %}
+                            	...
+                            {% endif %}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item auth-item" href="#">Выход</a>
+                        </li>
+                    </ul>
+                </li>
+                <div id="authDesktop">
+                    <li class="nav-item custom-nav-item">
+                        <a class="nav-link custom-link" href="#">
+                            <i class="bi bi-person-circle"></i>
+                            <span id="userName" title="{{ request.user.username }}">
+                            {{ request.user.username|slice:":15"}}
+                            </span>
+                            {% if request.user.username|length > 15 %}
+                            	...
+                            {% endif %}
+                        </a>
+                    </li>
+
+                    <li class="nav-item custom-nav-item">
+                        <a class="nav-link custom-link" href="#">Выход</a>
+                    </li>
+                </div>
+            {% else %}
+                <li id="authMobile" class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle custom-link" data-bs-toggle="dropdown" href="#" role="button"
+                       aria-expanded="false">
+                        <i class="bi bi-three-dots"></i>
+                    </a>
+                    <ul class="dropdown-menu custom-dropdown-menu-auth-mobile">
+                        <li>
+                            <a class="dropdown-item auth-item" href="#">Вход</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item auth-item" href="#">Регистрация</a>
+                        </li>
+                    </ul>
+                </li>
+                <div id="authDesktop">
+                    <li class="nav-item custom-nav-item">
+                        <a class="nav-link custom-link" href="#">Вход</a>
+                    </li>
+                    /
+                    <li class="nav-item custom-nav-item">
+                        <a class="nav-link custom-link" href="#">Регистрация</a>
+                    </li>
+                </div>
+            {% endif %}
+        </ul>
+    </header>
+        <main>{% block content %}{% endblock content %}</main>
+        <footer class="text-center mt-3"> &copy; 2025 Иркутск </footer>
+    </body>
+</html>
+
+
