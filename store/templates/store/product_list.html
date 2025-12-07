@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Каталог{% endblock %}
+
+{% block content %}
+	{% for item in product_list %}
+        <img src="{{ item.img }}" alt="">
+        <p>{{ item.name }}</p>
+        <p>{{ item.price }}</p>
+    {% empty %}
+        Пока отсутствует продукция магазина, извиняемся за доставленные неудобства
+	{% endfor %}
+{% endblock %}
