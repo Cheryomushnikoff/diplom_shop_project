@@ -111,7 +111,7 @@
                             <a class="dropdown-item auth-item" href="#">Вход</a>
                         </li>
                         <li>
-                            <a class="dropdown-item auth-item" href="#">Регистрация</a>
+                            <a class="dropdown-item auth-item" href="{% url 'users:register' %}">Регистрация</a>
                         </li>
                     </ul>
                 </li>
@@ -121,7 +121,7 @@
                     </li>
                     /
                     <li class="nav-item custom-nav-item">
-                        <a class="nav-link custom-link" href="#">Регистрация</a>
+                        <a class="nav-link custom-link" href="{% url 'users:register' %}">Регистрация</a>
                     </li>
                 </div>
             {% endif %}
