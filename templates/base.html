@@ -72,14 +72,11 @@
                     <ul class="dropdown-menu custom-dropdown-menu-auth-mobile">
                         <li>
                             <a class="dropdown-item auth-item" title="{{ request.user.username }}">
-                            {{ request.user.username|slice:":15"}}
-                            {% if request.user.username|length > 15 %}
-                            	...
-                            {% endif %}
+                            {{ request.user.email}}
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item auth-item" href="#">Выход</a>
+                            <a class="dropdown-item auth-item" href="{% url 'users:logout' %}">Выход</a>
                         </li>
                     </ul>
                 </li>
@@ -87,17 +84,15 @@
                     <li class="nav-item custom-nav-item">
                         <a class="nav-link custom-link" href="#">
                             <i class="bi bi-person-circle"></i>
-                            <span id="userName" title="{{ request.user.username }}">
-                            {{ request.user.username|slice:":15"}}
+                            <span id="userName" title="{{ request.user.email }}">
+                            {{ request.user.email}}
                             </span>
-                            {% if request.user.username|length > 15 %}
-                            	...
-                            {% endif %}
+
                         </a>
                     </li>
 
                     <li class="nav-item custom-nav-item">
-                        <a class="nav-link custom-link" href="#">Выход</a>
+                        <a class="nav-link custom-link" href="{% url 'users:logout' %}">Выход</a>
                     </li>
                 </div>
             {% else %}
@@ -108,7 +103,7 @@
                     </a>
                     <ul class="dropdown-menu custom-dropdown-menu-auth-mobile">
                         <li>
-                            <a class="dropdown-item auth-item" href="#">Вход</a>
+                            <a class="dropdown-item auth-item" href="{% url 'users:login' %}">Вход</a>
                         </li>
                         <li>
                             <a class="dropdown-item auth-item" href="{% url 'users:register' %}">Регистрация</a>
@@ -117,7 +112,7 @@
                 </li>
                 <div id="authDesktop">
                     <li class="nav-item custom-nav-item">
-                        <a class="nav-link custom-link" href="#">Вход</a>
+                        <a class="nav-link custom-link" href="{% url 'users:login' %}">Вход</a>
                     </li>
                     /
                     <li class="nav-item custom-nav-item">

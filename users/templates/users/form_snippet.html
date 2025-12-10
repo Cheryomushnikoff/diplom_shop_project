@@ -1,16 +1,19 @@
-{{ form.non_field_error }}
+{% for error in form.non_field_errors %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endfor %}
+
 {% for field in form %}
     <div>
-        {% if field.errors %}
-            <ul>
-                {% for error in field.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
         <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
         {{ field }}
         {{ field.help_text }}
+        {% if field.errors %}
+            <ul>
+                {% for error in field.errors %}
+                    <li class="alert alert-danger">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
 
 {% endfor %}
