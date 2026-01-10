@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+    <img width="200px" height="200px" src="{{ product.image.url }}" alt="{{ product.slug }}">
+	<h4>{{ product.name }}</h4>
+    <p>{{ product.price }}</p>
+    <p>{{ product.description }}</p>
+    <form method="POST">
+        {% csrf_token %}
+        {% if product.id in request.session.card %}
+            <input type="submit" value="-">
+            <input type="number" name="quantity">
+            <input type="submit" value="+">
+        {% else %}
+            <input type="submit" value="Добавить">
+        {% endif %}
+    </form>
+{% endblock %}
