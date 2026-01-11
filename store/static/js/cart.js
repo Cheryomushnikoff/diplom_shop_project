@@ -22,7 +22,7 @@ function updateCartElem(e) {
         quantity: 1
     };
 
-    localStorage.setItem('cart', JSON.stringify(cart));
+    sessionStorage.setItem('cart', JSON.stringify(cart));
     renderCartElem(container);
 
 }
@@ -73,5 +73,5 @@ async function redirectProduct(productName) {
 }
 
 function getCart() {
-    return localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : {};
+    return sessionStorage.getItem('cart') ? JSON.parse(sessionStorage.getItem('cart')) : {};
 }
