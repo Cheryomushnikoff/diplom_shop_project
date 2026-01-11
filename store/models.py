@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from unidecode import unidecode
+from shop_project import settings
 
 
 class Category(models.Model):
@@ -36,3 +37,34 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
+    session_key = models.CharField(
+        max_length=40,
+        null=True,
+        blank=True
+    )
+
+    update_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Корзина'
+        verbose_name_plural = 'Корзины'
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        verbose_name= 'Элемент'
+        verbose_name_plural = 'Элементы'
+
+    def get_total_price(self):
+        return self.product.price * self.quantity
