@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<div id="react-root"></div>
+        <script type="module" src="http://127.0.0.1:5173/src/main.jsx" ></script>
+{#        <script type="module" src="{% static "react/main.js" %}"></script>#}
+
+{% endblock content%}

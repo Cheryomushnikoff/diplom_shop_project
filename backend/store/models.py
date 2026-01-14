@@ -3,6 +3,8 @@ from django.utils.text import slugify
 from unidecode import unidecode
 from shop_project import settings
 
+from datetime import datetime
+
 
 class Category(models.Model):
     name = models.CharField(max_length=200, unique=True)
@@ -23,6 +25,8 @@ class Product(models.Model):
     slug = models.SlugField(unique=True, editable=False)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='products/')
+    in_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True)
 
     class Meta:
         verbose_name = 'Товар'

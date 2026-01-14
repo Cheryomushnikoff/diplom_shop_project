@@ -1,0 +1,17 @@
+@import "custom_nav_bar.css";
+@import "catalog.css";
+@import "search_form.css";
+@import "auth_nav_bar.css";
+
+.h2 {
+    text-align: center;
+}
+.img {
+    width: 100px;
+    height: 100px;
+}
+
+.container-item {
+    width: fit-content;
+    margin: auto;
+}

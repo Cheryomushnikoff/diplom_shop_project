@@ -6,15 +6,42 @@ cartButtons.forEach(cartButton =>
 
 function loadPage(e) {
     const containers = document.querySelectorAll('.product-container');
-    console.log(containers)
-    containers.forEach(container => renderCartElem(container))
+    containers.forEach(container => renderCartElem(container));
 }
 
-function updateCartElem(e) {
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+
+async function updateCartElem(e) {
     const cart = getCart();
     const container = e.target.parentNode;
     const productName = container.querySelector('.productName').textContent;
     const productPrice = container.querySelector('.productPrice').textContent;
+
+    const csrftoken = getCookie('csrftoken');
+
+    let response = await fetch('products/api-add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({ productName })
+    });
 
     cart[productName] = {
         productName,
@@ -36,7 +63,6 @@ function renderCartElem(container) {
 
     const btn = container.querySelector('button');
 
-    console.log(cart)
     const psevdoForm = document.createElement('div');
     psevdoForm.classList.add('psevdoForm');
 

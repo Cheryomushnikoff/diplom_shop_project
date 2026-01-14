@@ -1,0 +1,97 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="HtmlUnknownTag" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myValues">
+        <value>
+          <list size="10">
+            <item index="0" class="java.lang.String" itemvalue="nobr" />
+            <item index="1" class="java.lang.String" itemvalue="noembed" />
+            <item index="2" class="java.lang.String" itemvalue="comment" />
+            <item index="3" class="java.lang.String" itemvalue="noscript" />
+            <item index="4" class="java.lang.String" itemvalue="embed" />
+            <item index="5" class="java.lang.String" itemvalue="script" />
+            <item index="6" class="java.lang.String" itemvalue="form" />
+            <item index="7" class="java.lang.String" itemvalue="ul" />
+            <item index="8" class="java.lang.String" itemvalue="div" />
+            <item index="9" class="java.lang.String" itemvalue="li" />
+          </list>
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
+    <inspection_tool class="PyInterpreterInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="attrs" />
+          <option value="Automat" />
+          <option value="Babel" />
+          <option value="bcrypt" />
+          <option value="blinker" />
+          <option value="chardet" />
+          <option value="click" />
+          <option value="cloud-init" />
+          <option value="colorama" />
+          <option value="command-not-found" />
+          <option value="configobj" />
+          <option value="constantly" />
+          <option value="cryptography" />
+          <option value="dbus-python" />
+          <option value="distro" />
+          <option value="distro-info" />
+          <option value="httplib2" />
+          <option value="hyperlink" />
+          <option value="incremental" />
+          <option value="Jinja2" />
+          <option value="jsonpatch" />
+          <option value="jsonpointer" />
+          <option value="jsonschema" />
+          <option value="launchpadlib" />
+          <option value="lazr.restfulclient" />
+          <option value="lazr.uri" />
+          <option value="markdown-it-py" />
+          <option value="MarkupSafe" />
+          <option value="mdurl" />
+          <option value="netifaces" />
+          <option value="oauthlib" />
+          <option value="pyasn1" />
+          <option value="pyasn1-modules" />
+          <option value="pycurl" />
+          <option value="Pygments" />
+          <option value="PyGObject" />
+          <option value="PyHamcrest" />
+          <option value="PyJWT" />
+          <option value="pyOpenSSL" />
+          <option value="pyparsing" />
+          <option value="pyrsistent" />
+          <option value="pyserial" />
+          <option value="python-apt" />
+          <option value="pytz" />
+          <option value="PyYAML" />
+          <option value="requests" />
+          <option value="rich" />
+          <option value="service-identity" />
+          <option value="setuptools" />
+          <option value="six" />
+          <option value="systemd-python" />
+          <option value="Twisted" />
+          <option value="typing_extensions" />
+          <option value="ubuntu-pro-client" />
+          <option value="unattended-upgrades" />
+          <option value="urllib3" />
+          <option value="wadllib" />
+          <option value="wheel" />
+          <option value="zope.interface" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="services.naryad_services.show_naryad.*" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
