@@ -28,20 +28,20 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle custom-link" data-bs-toggle="dropdown" href="#" role="button"
                    aria-expanded="false">Категории<i class="bi bi-three-dots-vertical"></i></a>
-{#                <ul class="dropdown-menu custom-dropdown-menu-catalog">#}
-{#                    {% for cat in categories %}#}
-{#                        <li>#}
-{#                            <a class="dropdown-item cat-item" href="{% url 'store:catalog_category' cat.slug %}">#}
-{#                                <span>{{ cat.name }}</span>#}
-{#                                <img#}
-{#                                        src=""#}
-{#                                        alt=""#}
-{#                                        class="category-img"#}
-{#                                >#}
-{#                            </a>#}
-{#                        </li>#}
-{#                    {% endfor %}#}
-{#                </ul>#}
+                <ul class="dropdown-menu custom-dropdown-menu-catalog">
+                    {% for cat in categories %}
+                        <li>
+                            <a class="dropdown-item cat-item" href="#">
+                                <span>{{ cat.name }}</span>
+                                <img
+                                        src="{{ cat.image.url }}"
+                                        alt=""
+                                        class="category-img"
+                                >
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
             </li>
             <form id='searchForm' class="d-flex form-search" role="search" onsubmit="return false"
                   action="#">
@@ -62,7 +62,10 @@
                 </button>
             </form>
             <li class="nav-item">
-                <a class="nav-link custom-link" href="#"><i class="bi bi-cart"></i></a>
+                <a class="nav-link custom-link" href="#">
+                    <i class="bi bi-cart"></i>
+                    <span id="totalPrice">0,00</span>
+                </a>
             </li>
             {% if request.user.is_authenticated %}
                 <li id="authMobile" class="nav-item dropdown">
@@ -86,7 +89,7 @@
                         <a class="nav-link custom-link" href="#">
                             <i class="bi bi-person-circle"></i>
                             <span id="userName" title="{{ request.user.email }}">
-                            {{ request.user.email}}
+                            {{ request.user.email|truncatechars:5 }}
                             </span>
 
                         </a>
@@ -123,7 +126,15 @@
             {% endif %}
         </ul>
     </header>
-        <main>{% block content %}{% endblock content %}</main>
+        <main>
+        <div
+                    id="react-root"
+                    {% block react_page %}{% endblock %}
+                >
+                </div>
+                <script type="module" src="http://127.0.0.1:5173/src/main.jsx"></script>
+            {% block content %}{% endblock content %}
+        </main>
         <footer class="text-center mt-3"> &copy; 2025 Иркутск </footer>
     </body>
 </html>

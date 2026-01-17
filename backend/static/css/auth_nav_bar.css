@@ -14,12 +14,12 @@
 }
 
 #authDesktop {
-    margin-left: 3rem;
+    margin-left: 0.4rem;
     display: none;
 }
 
 #authMobile {
-    margin-left: 1rem;
+    margin-left: 0.4rem;
 }
 
 /*убрать треугольник у заглавия выпадающего списка*/
