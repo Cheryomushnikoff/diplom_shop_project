@@ -3,15 +3,28 @@
 @import "search_form.css";
 @import "auth_nav_bar.css";
 
-.h2 {
-    text-align: center;
-}
-.img {
+
+.container-item img {
     width: 100px;
     height: 100px;
 }
 
 .container-item {
     width: fit-content;
+    margin: auto;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px 5px;
+    box-shadow: 10px 10px 10px gray;
+}
+
+
+.products {
+    display: flex;
+    width: 70%;
     margin: auto;
 }
