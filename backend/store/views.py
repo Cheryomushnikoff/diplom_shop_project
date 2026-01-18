@@ -20,4 +20,7 @@ def product_card_view(request, slug):
     product = get_object_or_404(Product, slug=slug)
     return render(request, 'store/product_card.html',{'product': product})
 
+def cart_page(request):
+    return render(request, "store/cart.html")
+
 

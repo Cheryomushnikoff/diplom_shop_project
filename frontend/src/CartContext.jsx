@@ -57,6 +57,31 @@ export function CartProvider({children}) {
 
     };
 
+    const removeFromCart = (id) => {
+    setCartItems(prev => {
+      const next = prev.filter(p => p.id !== id);
+      saveServer(next);
+      return next;
+    });
+  };
+
+  const setQty = (id, qty) => {
+    setCartItems(prev => {
+      let next;
+
+      if (qty <= 0) {
+        next = prev.filter(p => p.id !== id);
+      } else {
+        next = prev.map(p =>
+          p.id === id ? { ...p, quantity: qty } : p
+        );
+      }
+
+      saveServer(next);
+      return next;
+    });
+  };
+
     const totalPrice = cartItems.reduce(
         (sum, p) => sum + p.price * p.quantity,
         0
@@ -70,7 +95,7 @@ export function CartProvider({children}) {
 
 
     return (
-        <CartContext.Provider value={{cartItems, addToCart}}>
+        <CartContext.Provider value={{cartItems, addToCart, setQty, removeFromCart}}>
             {children}
         </CartContext.Provider>
     );

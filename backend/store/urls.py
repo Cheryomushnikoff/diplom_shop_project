@@ -23,5 +23,6 @@ urlpatterns = [
     path("api/cart/sync/", CartSyncView.as_view(), name="cart-sync"),
     path("api/products/search/", ProductSearchView.as_view()),
     path('api/', include(router.urls)),
+    path("cart/", cart_page, name="cart"),
 
 ]
