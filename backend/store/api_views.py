@@ -80,3 +80,10 @@ class CartSyncView(APIView):
         CartItem.objects.filter(cart=cart).exclude(product_id__in=incoming_ids).delete()
 
         return Response({"status": "ok"})
+
+class ProductSearchView(APIView):
+    def get(self, request):
+        q = request.query_params.get("q", "")
+        products = Product.objects.filter(name__icontains=q)[:10]
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)

@@ -1,10 +1,14 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .api_views import CartViewSet, CartSyncView
+from .api_views import (
+    CartViewSet,
+    CartSyncView,
+    ListProductAPIView,
+    ProductSearchView
+)
 
+from .views import main_page_view, product_card_view, product_list_page, cart_page
 
-from .views import main_page_view, product_card_view, product_list_page
-from .api_views import ListProductAPIView
 
 app_name = 'store'
 
@@ -17,6 +21,7 @@ urlpatterns = [
     path('products/<slug>', product_card_view, name='product_card'),
     path('api/products/', ListProductAPIView.as_view()),
     path("api/cart/sync/", CartSyncView.as_view(), name="cart-sync"),
+    path("api/products/search/", ProductSearchView.as_view()),
     path('api/', include(router.urls)),
 
 ]
