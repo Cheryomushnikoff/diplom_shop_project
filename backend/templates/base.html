@@ -43,8 +43,8 @@
                     {% endfor %}
                 </ul>
             </li>
-            <form id='searchForm' class="d-flex form-search" role="search" onsubmit="return false"
-                  action="#">
+            <form id='searchForm' class="d-flex form-search" role="search" onsubmit="e.preventDefault()"
+                  action="{% url 'store:products' %}">
                 <div id="containerMainSearch">
                     <input
                             {% if request.GET %}
@@ -62,7 +62,7 @@
                 </button>
             </form>
             <li class="nav-item">
-                <a class="nav-link custom-link" href="#">
+                <a class="nav-link custom-link" href="{% url 'store:cart' %}">
                     <i class="bi bi-cart"></i>
                     <span id="totalPrice">0,00</span>
                 </a>
@@ -127,13 +127,13 @@
         </ul>
     </header>
         <main>
+            {% block content %}{% endblock content %}
         <div
                     id="react-root"
                     {% block react_page %}{% endblock %}
                 >
                 </div>
                 <script type="module" src="http://127.0.0.1:5173/src/main.jsx"></script>
-            {% block content %}{% endblock content %}
         </main>
         <footer class="text-center mt-3"> &copy; 2025 Иркутск </footer>
     </body>
