@@ -9,7 +9,7 @@
 
 .form-search {
     position: relative;
-    display: flex;
+    display: inline-flex;
 }
 
 .btn-search {
@@ -27,7 +27,7 @@
 }
 
 @media screen and (max-width:624px) {
-    #containerMainSearch {
+    #search-container {
         width: 200px;
         justify-content: right;
         position: absolute !important;
@@ -58,4 +58,8 @@
     #searchForm:has(button:active) {
         transform: translateY(5px)
     }
+}
+
+.container-form-button{
+    width: 300px !important;
 }

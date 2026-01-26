@@ -1,18 +1,26 @@
-import Products from "./Products.jsx";
-import CartPage from "./CartPage.jsx";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+import Layout from "./layout/Layout";
+import Products from "./pages/Products";
+import Cart from "./pages/Cart";
+import LoginPage from "./pages/LoginPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
+import CheckoutPage from "./pages/CheckoutPage.jsx";
+
 
 export default function App() {
-  const root = document.getElementById("react-root");
-  const page = root?.dataset.page;
-
-  if (page === "products") {
-    return <Products />;
-  }
-
-  if (page === "cart") {
-    return <CartPage />;
-  }
-
-  return null;
+    return (
+        <BrowserRouter>
+            <Layout>
+                <Routes>
+                    <Route path="/products" element={<Products/>}/>
+                    <Route path="/cart" element={<Cart/>}/>
+                    <Route path="/login" element={<LoginPage/>}/>
+                    <Route path="/register" element={<RegisterPage/>}/>
+                    <Route path="/profile" element={<ProfilePage/>}/>
+                    <Route path="/checkout" element={<CheckoutPage/>} />
+                </Routes>
+            </Layout>
+        </BrowserRouter>
+    );
 }
-

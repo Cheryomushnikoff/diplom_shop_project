@@ -9,7 +9,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     address = models.CharField(max_length=500, blank=True)
 
-    first_name = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=200,blank=True, null=True)
     last_name = models.CharField(max_length=200, blank=True, null=True)
     second_name = models.CharField(max_length=200, blank=True, null=True)
 

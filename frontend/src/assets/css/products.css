@@ -1,0 +1,36 @@
+.container-item img {
+    width: 100px;
+    height: 100px;
+}
+
+.container-item {
+    width: fit-content;
+    margin: auto;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px 5px;
+
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.container-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px black;
+    z-index: 5;
+}
+
+
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1.5fr;
+    gap: 10px;
+    width: 70%;
+    margin: auto;
+}

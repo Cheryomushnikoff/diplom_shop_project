@@ -3,7 +3,7 @@ export function getSearchMenu(e) {
         e.stopPropagation();
         e.preventDefault();
         const searchInput = document.querySelector('[name="name"]');
-        const searchContainer = document.querySelector('#containerMainSearch');
+        const searchContainer = document.querySelector('#search-container');
         if (!searchContainer.classList.contains('visible')) {
             setTimeout(() => searchInput.style.width = '200px', 0);
             searchContainer.classList.add('visible');
@@ -21,7 +21,7 @@ export function getSearchMenu(e) {
 export function removeSearchMenu() {
     if (window.innerWidth <= 624) {
         const searchInput = document.querySelector('[name="name"]');
-        const searchContainer = document.querySelector('#containerMainSearch');
+        const searchContainer = document.querySelector('#search-container');
 
         if (searchContainer.classList.contains('visible')) {
             setTimeout(() => searchContainer.classList.remove('visible'), 300);

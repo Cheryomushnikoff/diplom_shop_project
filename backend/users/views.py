@@ -1,34 +1,71 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
+from rest_framework import generics, permissions
+from .serializers import RegisterSerializer, UserSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from .serializers import EmailTokenObtainPairSerializer
 
-from .forms import CustomUserCreationForm, CustomAuthForm
+class EmailTokenObtainPairView(TokenObtainPairView):
+    serializer_class = EmailTokenObtainPairSerializer
 
-def register_view(request):
-    form = CustomUserCreationForm()
+# Регистрация
+class RegisterView(generics.CreateAPIView):
+    serializer_class = RegisterSerializer
+    permission_classes = [permissions.AllowAny]
 
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-            return redirect('store:main_page')
-
-    return render(request,'users/register.html', {'form': form.render('users/form_snippet.html')})
-
-
-def login_view(request):
-    form = CustomAuthForm()
-
-    if request.method == 'POST':
-        form = CustomAuthForm(request.POST)
-
-        if form.is_valid():
-            user = form.cleaned_data['user']
-            login(request, user)
-            return redirect('store:main_page')
-    return render(request, 'users/login.html', context={'form': form.render('users/form_snippet.html')})
+# Логаут (удаляем refresh токен на фронтенде)
+@api_view(['POST'])
+def LogoutView(request):
+    try:
+        refresh_token = request.data["refresh"]
+        token = RefreshToken(refresh_token)
+        token.blacklist()  # чтобы токен больше не использовался (если включена blacklist)
+        return Response(status=205)
+    except Exception as e:
+        return Response(status=400)
 
 
-def logout_view(request):
-    logout(request)
-    return redirect('store:main_page')
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def current_user(request):
+    user = request.user
+    return Response({
+        "id": user.id,
+        "email": user.email,
+        "name": user.first_name
+    })
+
+@api_view(["GET", "PUT"])
+@permission_classes([IsAuthenticated])
+def profile_view(request):
+    user = request.user
+    if request.method == "GET":
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    elif request.method == "PUT":
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        print(serializer.errors)
+        return Response(serializer.errors, status=400)
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def change_password(request):
+    user = request.user
+    old = request.data.get("old_password")
+    new = request.data.get("new_password")
+
+    if not old or not new:
+        return Response({"error": "Оба поля обязательны"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not user.check_password(old):
+        return Response({"error": "Старый пароль неверен"}, status=status.HTTP_400_BAD_REQUEST)
+
+    user.set_password(new)
+    user.save()
+    return Response({"status": "Пароль успешно изменён"})

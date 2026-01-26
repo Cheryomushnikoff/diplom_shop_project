@@ -45,7 +45,7 @@
             </li>
             <form id='searchForm' class="d-flex form-search" role="search" onsubmit="e.preventDefault()"
                   action="{% url 'store:products' %}">
-                <div id="containerMainSearch">
+                <div id="search-container">
                     <input
                             {% if request.GET %}
                                 value="{{ request.GET.name }}"
