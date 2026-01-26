@@ -1,7 +1,7 @@
 .custom-nav{
     width: 80%;
     min-width: 500px;
-    max-width: 900px;
+    max-width: 850px;
     margin: auto;
     --bs-nav-link-color: #515c60;
     --bs-nav-link-hover-color: #000000;
@@ -56,8 +56,6 @@
 }
 
 
-
-
 @media screen and (min-device-width:451px) {
     .custom-link:hover {
     color: #000000;
@@ -66,5 +64,42 @@
     .custom-link:active {
         transform: translateY(5px)
     }
+    .non-active {
+        transform: translateY(0px) !important;
+    }
+    .non-active:active {
+        transform: translateY(0px) !important;
+    }
 }
+
+.bi-person-circle {
+    margin-right: 5px;
+}
+
+.userSpan {
+    margin-right: 5px;
+}
+
+.cartDiv{
+    cursor: pointer;
+}
+.bi-cart{
+    margin-right: 3px;
+}
+/* Убираем стрелки в Chrome, Edge, Safari */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Убираем стрелки в Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.card {
+    z-index: 100000000 !important;
+}
+
 

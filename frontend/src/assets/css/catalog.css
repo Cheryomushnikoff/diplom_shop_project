@@ -1,0 +1,24 @@
+.catalog-container{
+    border-radius: 10px;
+    margin: auto;
+    overflow: hidden;
+    display: flex;
+    flex-flow: row wrap;
+    width: 500px;
+    justify-content: space-evenly;
+}
+.img-product-card {
+    width: 250px;
+    height: 250px;
+    border-radius: 10px;
+}
+
+.product-card{
+    text-align: justify;
+    width: 300px;
+    margin: auto;
+    display: flex;
+    justify-content: space-evenly;
+    flex-flow: column;
+    align-items: center;
+}

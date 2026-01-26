@@ -1,0 +1,10 @@
+.category-dropdown {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.category-dropdown.show {
+  opacity: 1;
+  transform: translateY(0);
+}

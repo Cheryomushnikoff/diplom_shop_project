@@ -1,0 +1,14 @@
+.mini-cart {
+  position: fixed;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.mini-cart.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
