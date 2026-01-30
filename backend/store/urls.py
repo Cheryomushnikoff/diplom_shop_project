@@ -7,7 +7,8 @@ from .api_views import (
     ProductSearchView,
     ListCategoryAPIView,
     CartMergeView,
-    OrderCreateView
+    OrderCreateView,
+    MyOrdersAPIView, MyOrderDetailAPIView
 )
 
 from .views import main_page_view, product_card_view, product_list_page, cart_page
@@ -19,6 +20,8 @@ router = DefaultRouter()
 router.register(r'cart', CartViewSet, basename='cart')
 
 urlpatterns = [
+    path('api/orders/<int:order_id>/', MyOrderDetailAPIView.as_view()),
+    path("api/orders/", MyOrdersAPIView.as_view()),
     path('api/orders/create/', OrderCreateView.as_view()),
     path('api/category/', ListCategoryAPIView.as_view()),
     path("api/cart/merge/", CartMergeView.as_view()),
