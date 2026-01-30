@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import OrdersTab from "./orders/OrdersTab.jsx";
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -114,21 +115,9 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {activeTab==="orders" && (
-        <div className="card shadow p-4">
-          <h4>История заказов</h4>
-          {orders.length===0 ? <p>Заказы отсутствуют.</p> : (
-            <table className="table table-striped mt-3">
-              <thead>
-                <tr><th>Номер</th><th>Дата</th><th>Сумма</th><th>Статус</th></tr>
-              </thead>
-              <tbody>
-                {orders.map(o=>(<tr key={o.id}><td>{o.id}</td><td>{o.created_at}</td><td>{o.total_price}</td><td>{o.status}</td></tr>))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      )}
+      {activeTab==="orders" && <OrdersTab/>}
+
+
 
       {activeTab==="password" && (
         <div className="card shadow p-4">
