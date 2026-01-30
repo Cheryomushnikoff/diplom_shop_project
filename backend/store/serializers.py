@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, CartItem, Category
+from .models import Product, CartItem, Category, Order, OrderItem
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,6 +40,49 @@ class OrderCreateSerializer(serializers.Serializer):
     address = serializers.CharField()
     first_name = serializers.CharField()
     last_name = serializers.CharField()
+
+class OrderListSerializer(serializers.ModelSerializer):
+    status_display = serializers.CharField(
+        source="get_status_display"
+    )
+
+    class Meta:
+        model = Order
+        fields = (
+            "id",
+            "created_at",
+            "status_display",
+            "total_price",
+        )
+
+
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    product_name = serializers.CharField(
+        source="product.name",
+        read_only=True
+    )
+
+    class Meta:
+        model = OrderItem
+        fields = (
+            "id",
+            "product_name",
+            "price",
+            "quantity",
+        )
+
+
+class OrderDetailSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True)
+    status_display = serializers.CharField(
+        source="get_status_display"
+    )
+
+    class Meta:
+        model = Order
+        fields = "__all__"
 
 
 

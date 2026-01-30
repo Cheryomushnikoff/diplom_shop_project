@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -6,7 +7,8 @@ from django.utils.text import slugify
 from unidecode import unidecode
 
 from .models import Cart, CartItem, Product, Category, Order, OrderItem
-from .serializers import ProductSerializer, CartItemSerializer, CategorySerializer, OrderCreateSerializer
+from .serializers import ProductSerializer, CartItemSerializer, CategorySerializer, OrderCreateSerializer, \
+    OrderListSerializer, OrderDetailSerializer
 
 
 class ListProductAPIView(generics.ListAPIView):
@@ -176,3 +178,29 @@ class OrderCreateView(APIView):
             CartItem.objects.filter(cart=cart).delete()
 
         return Response({"order_id": order.id})
+
+class MyOrdersAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        orders = Order.objects.filter(
+            user=request.user
+        ).order_by("-created_at")
+
+        return Response(
+            OrderListSerializer(orders, many=True).data
+        )
+
+class MyOrderDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, order_id):
+        order = get_object_or_404(
+            Order,
+            id=order_id,
+            user=request.user
+        )
+        return Response(
+            OrderDetailSerializer(order).data
+        )
+
