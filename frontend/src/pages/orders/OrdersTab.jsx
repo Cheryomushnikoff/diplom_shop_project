@@ -19,8 +19,8 @@ export default function OrdersTab() {
 
   return (
     <div className="row">
-      <div className="col-md-5">
-        <ul className="list-group">
+      <div className="col-md-5 ">
+        <ul className="list-group orders-list">
           {orders.map(o => (
             <li
               key={o.id}

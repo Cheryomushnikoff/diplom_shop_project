@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Заказ{% endblock %}</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f8f9fa; color: #212529; margin:0; padding:20px; }
+  .card { background:#fff; border-radius:0.375rem; box-shadow:0 0.125rem 0.25rem rgba(0,0,0,.075); padding:20px; max-width:600px; margin:auto; }
+  h2 { font-size:1.5rem; margin-bottom:0.5rem; color:#343a40; }
+  table { width:100%; border-collapse:collapse; margin-top:15px; margin-bottom:15px; }
+  th, td { padding:8px 12px; border-bottom:1px solid #dee2e6; text-align:left; }
+  th { background:#e9ecef; }
+  .text-end { text-align:right; }
+  .btn { display:inline-block; text-decoration:none; color:#fff; background:#6c757d; padding:8px 12px; border-radius:0.25rem; }
+</style>
+</head>
+<body>
+  <div class="card">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>
+

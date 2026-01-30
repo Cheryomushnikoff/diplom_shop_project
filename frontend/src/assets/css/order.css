@@ -1,3 +1,17 @@
 .list-group-item {
     cursor:pointer;
+    border: none;
+    border-bottom: 1px solid gray;
+}
+.list-group-item:last-child {
+
+    border: none;
+
+}
+
+.orders-list {
+    height: 396px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid gray;
 }

@@ -1,16 +1,15 @@
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.db import transaction
-from .models import Order
-
+from django.template.loader import render_to_string
+from .models import Order, OrderItem
 
 @receiver(pre_save, sender=Order)
 def order_pre_save(sender, instance, **kwargs):
     if not instance.pk:
         instance._old_status = None
         return
-
     try:
         old = sender.objects.get(pk=instance.pk)
         instance._old_status = old.status
@@ -20,42 +19,41 @@ def order_pre_save(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Order)
 def order_email_notifications(sender, instance, created, **kwargs):
-
+    """
+    Отправка письма ТОЛЬКО после коммита и если заказ реально создан или статус изменился
+    """
     def send_email():
-        if not instance.email:
+        # Получаем все товары заказа
+        order_items = OrderItem.objects.filter(order=instance)
+        if not order_items.exists():
+            # Если товаров нет — не отправляем письмо
             return
 
-        items = instance.items.all()
-        if not items.exists():
-            return  # не шлём пустой заказ
+        # Шаблоны по статусу
+        status_templates = {
+            "new": "store/email/order_new.html",
+            "processing": "store/email/order_processing.html",
+            "paid": "store/email/order_paid.html",
+            "shipped": "store/email/order_shipped.html",
+            "completed": "store/email/order_completed.html",
+            "canceled": "store/email/order_canceled.html",
+        }
+        template = status_templates.get(instance.status, "store/email/order_new.html")
+        subject = f"Заказ #{instance.id} — {instance.get_status_display()}"
 
-        lines = []
-        lines.append(f"Спасибо за заказ!\n")
-        lines.append(f"Номер заказа: {instance.id}")
-        lines.append(f"Статус: {instance.get_status_display()}\n")
-        lines.append("Состав заказа:")
-        lines.append("-" * 30)
+        html_message = render_to_string(template, {
+            "order": instance,
+            "order_items": order_items,
+        })
 
-        total = 0
-        for item in items:
-            item_total = item.price * item.quantity
-            total += item_total
-            lines.append(
-                f"• {item.product.name} — "
-                f"{item.quantity} × {item.price} ₽ = {item_total} ₽"
-            )
-
-        lines.append("-" * 30)
-        lines.append(f"Итого: {total} ₽\n")
-        lines.append("Адрес доставки:")
-        lines.append(instance.address)
-
-        send_mail(
-            subject=f"Заказ #{instance.id} оформлен",
-            message="\n".join(lines),
-            from_email=None,
-            recipient_list=[instance.email],
-            fail_silently=False,
+        email = EmailMessage(
+            subject=subject,
+            body=html_message,
+            from_email=None,  # DEFAULT_FROM_EMAIL
+            to=[instance.email],
         )
+        email.content_subtype = "html"
+        email.send(fail_silently=False)
 
+    # 🔹 отправляем только после коммита
     transaction.on_commit(send_email)

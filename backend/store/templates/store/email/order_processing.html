@@ -1,0 +1,9 @@
+{% extends "store/email/base_email.html" %}
+{% block title %}Заказ #{{ order.id }} в обработке{% endblock %}
+{% block content %}
+<h2>Ваш заказ в обработке</h2>
+<p>Номер заказа: <strong>{{ order.id }}</strong></p>
+<p>Статус: <strong>{{ order.get_status_display }}</strong></p>
+
+{% include "store/email/order_items_table.html" with items=order_items total_price=order.total_price %}
+{% endblock %}
