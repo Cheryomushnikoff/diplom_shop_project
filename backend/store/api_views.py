@@ -1,14 +1,18 @@
+from django.core.serializers import serialize
+from django.db.models import Avg, Count
 from django.shortcuts import get_object_or_404
+from rest_framework.generics import RetrieveAPIView, ListCreateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework import status, generics, viewsets, permissions
 from django.utils.text import slugify
 from unidecode import unidecode
 
-from .models import Cart, CartItem, Product, Category, Order, OrderItem
+from .models import Cart, CartItem, Product, Category, Order, OrderItem, Review
 from .serializers import ProductSerializer, CartItemSerializer, CategorySerializer, OrderCreateSerializer, \
-    OrderListSerializer, OrderDetailSerializer
+    OrderListSerializer, OrderDetailSerializer, ReviewSerializer
+
 
 
 class ListProductAPIView(generics.ListAPIView):
@@ -26,7 +30,8 @@ class CartViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        cart = Cart.objects.get(user=self.request.user)
+        cart, _ = Cart.objects.get_or_create(user=self.request.user)
+        print(cart)
         return CartItem.objects.filter(cart=cart)
 
     def perform_create(self, serializer):
@@ -94,6 +99,7 @@ class CartSyncView(APIView):
 class ProductSearchView(APIView):
     def get(self, request):
         q = request.query_params.get("q", "")
+        print(q)
         products = Product.objects.filter(name__icontains=q)[:10]
         serializer = ProductSerializer(products, many=True, context={'request': request})
         print(serializer.data)
@@ -204,3 +210,27 @@ class MyOrderDetailAPIView(APIView):
             OrderDetailSerializer(order).data
         )
 
+class ProductDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, slug):
+        product = get_object_or_404(Product, slug=slug)
+        print(product.image)
+        return Response(
+            ProductSerializer(product, context={'request': request}).data
+        )
+
+class ProductReviewAPIView(ListCreateAPIView):
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        product = Product.objects.get(slug=self.kwargs["slug"])
+        return Review.objects.filter(product=product)
+
+    def perform_create(self, serializer):
+        product = Product.objects.get(slug=self.kwargs["slug"])
+        serializer.save(
+            product=product,
+            user=self.request.user
+        )

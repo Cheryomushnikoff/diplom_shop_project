@@ -1,157 +1,123 @@
-import {createContext, useContext, useEffect, useState} from "react";
-import {refreshToken as refreshTokenAPI} from "./helpers/api.js";
-import {clearGuestCart, loadGuestCart, saveGuestCart} from "./helpers/cartStorage.js";
-import parseJwt from "./helpers/api.js";
+import { createContext, useContext, useEffect, useState } from "react";
+import apiClient from "./helpers/apiClient";
+import {
+    clearGuestCart,
+    loadGuestCart,
+    saveGuestCart,
+} from "./helpers/cartStorage";
 
 const MainContext = createContext();
 
-export function MainProvider({children}) {
+export function MainProvider({ children }) {
     const [authTokens, setAuthTokens] = useState(() => {
-        const tokens = localStorage.getItem("authTokens");
-        if (tokens) {
-            try {
-                return JSON.parse(tokens);
-            } catch (e) {
-                console.error("Ошибка при парсинге authTokens:", e);
-                localStorage.removeItem("authTokens"); // очищаем некорректные данные
-            }
+        try {
+            return JSON.parse(localStorage.getItem("authTokens"));
+        } catch {
+            localStorage.removeItem("authTokens");
+            return null;
         }
-        return null;
     });
-    const [user, setUser] = useState(() =>
-        authTokens ? parseJwt(authTokens.access) : null
-    );
 
+    const [user, setUser] = useState(null);
     const [cartItems, setCartItems] = useState([]);
 
+    /* ---------------- AUTH ---------------- */
 
-    const loginUser = async (data) => {
+    const loginUser = async (tokens) => {
+        localStorage.setItem("authTokens", JSON.stringify(tokens));
+        setAuthTokens(tokens);
 
-        localStorage.setItem("authTokens", JSON.stringify(data));
-        setUser(parseJwt(data.access));
         const guestCart = loadGuestCart();
 
-        if (guestCart.length > 0) {
-            await fetch("/api/cart/merge/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${data.access}`,
-                },
-                body: JSON.stringify(
-                    guestCart.map(p => ({
-                        product_id: p.id,
-                        quantity: p.quantity,
-                    }))
-                ),
-            });
-
+        if (guestCart.length) {
+            await apiClient.post(
+                "cart/merge/",
+                guestCart.map((p) => ({
+                    product_id: p.id,
+                    quantity: p.quantity,
+                }))
+            );
             clearGuestCart();
         }
-        setAuthTokens(data);
     };
 
     const logoutUser = () => {
+        localStorage.removeItem("authTokens");
         setAuthTokens(null);
         setUser(null);
-        localStorage.removeItem("authTokens");
         setCartItems([]);
     };
 
-    // Автообновление access-токена каждые 14 минут
+    /* ---------------- USER ---------------- */
+
     useEffect(() => {
         if (!authTokens) return;
 
-        const interval = setInterval(async () => {
-            try {
-                const res = await refreshTokenAPI(authTokens.refresh);
-                const newTokens = {
-                    access: res.data.access,
-                    refresh: authTokens.refresh,
-                };
-                setAuthTokens(newTokens);
-                localStorage.setItem("authTokens", JSON.stringify(newTokens));
-                setUser(parseJwt(newTokens.access));
-            } catch (err) {
-                console.error("Не удалось обновить токен", err);
-                logoutUser();
-            }
-        }, 1000 * 60 * 14);
-
-        return () => clearInterval(interval);
+        apiClient
+            .get("accounts/user/")
+            .then((res) => setUser(res.data))
+            .catch(() => logoutUser());
     }, [authTokens]);
 
-    // Загрузка корзины с сервера
+    /* ---------------- CART LOAD ---------------- */
+
     useEffect(() => {
         if (!authTokens) {
             setCartItems(loadGuestCart());
             return;
         }
 
-            fetch("/api/cart/", {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${authTokens.access}`
-                },
+        apiClient
+            .get("cart/")
+            .then((res) => {
+                const normalized = res.data.map((item) => ({
+                    ...item.product,
+                    quantity: item.quantity,
+                    cart_id: item.id,
+                }));
+                setCartItems(normalized);
             })
-                .then((r) => r.json())
-                .then((data) => {
-                    const normalized = data.map((item) => ({
-                        ...item.product,
-                        quantity: item.quantity,
-                        cart_id: item.id,
-                    }));
-                    setCartItems(normalized);
-                })
-                .catch((err) => console.error(err));
+            .catch(console.error);
     }, [authTokens]);
 
-    const saveServer = async (items) => {
-        try {
-            const token = JSON.parse(localStorage.getItem("authTokens")).access;
+    /* ---------------- CART SYNC ---------------- */
 
-            await fetch("/api/cart/sync/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                credentials: "include",
-                body: JSON.stringify(
-                    items.map((p) => ({product_id: p.id, quantity: p.quantity}))
-                ),
-            });
+    const syncCart = async (items) => {
+        try {
+            await apiClient.post(
+                "cart/sync/",
+                items.map((p) => ({
+                    product_id: p.id,
+                    quantity: p.quantity,
+                }))
+            );
         } catch (err) {
-            console.error("Ошибка синхронизации корзины:", err);
+            console.error("Ошибка синхронизации корзины", err);
         }
     };
+
+    /* ---------------- CART ACTIONS ---------------- */
 
     const addToCart = (product) => {
         setCartItems((prev) => {
             const found = prev.find((p) => p.id === product.id);
-            const items = found
+            const next = found
                 ? prev.map((p) =>
-                    p.id === product.id ? {...p, quantity: p.quantity + 1} : p
-                )
-                : [...prev, {...product, quantity: 1}];
-            if (authTokens) {
-                saveServer(items);
-            } else {
-                saveGuestCart(items)
-            }
+                      p.id === product.id
+                          ? { ...p, quantity: p.quantity + 1 }
+                          : p
+                  )
+                : [...prev, { ...product, quantity: 1 }];
 
-            return items;
+            authTokens ? syncCart(next) : saveGuestCart(next);
+            return next;
         });
     };
 
     const removeFromCart = (id) => {
         setCartItems((prev) => {
             const next = prev.filter((p) => p.id !== id);
-            if (authTokens) {
-                saveServer(next);
-            } else {
-                saveGuestCart(next)
-            }
+            authTokens ? syncCart(next) : saveGuestCart(next);
             return next;
         });
     };
@@ -161,31 +127,33 @@ export function MainProvider({children}) {
             const next =
                 qty <= 0
                     ? prev.filter((p) => p.id !== id)
-                    : prev.map((p) => (p.id === id ? {...p, quantity: qty} : p));
-            if (authTokens) {
-                saveServer(next);
-            } else {
-                saveGuestCart(next)
-            }
+                    : prev.map((p) =>
+                          p.id === id ? { ...p, quantity: qty } : p
+                      );
+
+            authTokens ? syncCart(next) : saveGuestCart(next);
             return next;
         });
     };
 
-    const totalPrice = cartItems.reduce((sum, p) => sum + p.price * p.quantity, 0);
+    const totalPrice = cartItems.reduce(
+        (sum, p) => sum + p.price * p.quantity,
+        0
+    );
 
     return (
         <MainContext.Provider
             value={{
-                setCartItems,
-                cartItems,
-                addToCart,
-                setQty,
-                removeFromCart,
                 authTokens,
                 user,
+                cartItems,
+                addToCart,
+                removeFromCart,
+                setQty,
                 loginUser,
                 logoutUser,
                 totalPrice,
+                setCartItems,
             }}
         >
             {children}
@@ -194,5 +162,3 @@ export function MainProvider({children}) {
 }
 
 export const useMainContext = () => useContext(MainContext);
-
-

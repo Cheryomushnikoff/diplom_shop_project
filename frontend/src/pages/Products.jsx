@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {useSearchParams} from "react-router-dom";
+import {Link, useSearchParams} from "react-router-dom";
 import {useMainContext} from "./MainContext.jsx";
 
 export default function Products() {
@@ -20,7 +20,10 @@ export default function Products() {
         fetch(url)
             .then(res => res.json())
             .then(data => {
-                console.log(data)
+                if (data.detail) {
+                    setProducts([])
+                    return
+                }
                 setProducts(data)
             });
     }, [query]);
@@ -33,10 +36,10 @@ export default function Products() {
                 {query ? `Результаты по: "${query}"` : "Товары"}
             </h2>
             <div className="products">
-                {products.map(p => (
+                {products.length !== 0 ? products.map(p => (
                     <div key={p.id} className="container-item">
                         <img src={p.image} alt={p.slug}/>
-                        <p><a href={p.slug}>{p.name}</a></p>
+                        <Link to={p.slug}><p>{p.name}</p></Link>
                         <p>{p.price}</p>
                         {findItem(p) ? (
                                 <div className="btn-group btn-group-sm">
@@ -70,7 +73,7 @@ export default function Products() {
                         }
 
                     </div>
-                ))}
+                )): <h3>Таких товаров нет</h3>}
             </div>
         </div>
     );

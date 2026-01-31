@@ -1,20 +1,30 @@
+from django.db.models import Avg
 from rest_framework import serializers
-from .models import Product, CartItem, Category, Order, OrderItem
+from .models import Product, CartItem, Category, Order, OrderItem, Review
 
 class ProductSerializer(serializers.ModelSerializer):
+    average_rating = serializers.SerializerMethodField()
+    reviews_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
-        fields = [
-            'id',
-            'name' ,
-            'price' ,
-            'category',
-            'slug' ,
-            'description' ,
-            'image' ,
-            'in_active' ,
-            'created_at' ,
-        ]
+        fields = (
+            "id",
+            "slug",
+            "name",
+            "price",
+            "image",
+            "description",
+            "average_rating",
+            "reviews_count",
+        )
+
+    def get_average_rating(self, obj):
+        avg = obj.reviews.aggregate(avg=Avg("rating"))["avg"]
+        return round(avg, 1) if avg else 0
+
+    def get_reviews_count(self, obj):
+        return obj.reviews.count()
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,4 +95,26 @@ class OrderDetailSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ReviewSerializer(serializers.ModelSerializer):
+    user_email = serializers.CharField(
+        source="user.email", read_only=True
+    )
+    user_name = serializers.CharField(
+        source="user.first_name", read_only=True
+    )
+    user_id = serializers.IntegerField(
+        source="user.id", read_only=True
+    )
+
+    class Meta:
+        model = Review
+        fields = (
+            "id",
+            "rating",
+            "text",
+            "created_at",
+            "user_email",
+            "user_name",
+            "user_id",
+        )
 

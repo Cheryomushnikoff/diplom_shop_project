@@ -3,8 +3,7 @@ import {useEffect, useState} from "react";
 import {useMainContext} from "../pages/MainContext.jsx";
 
 export default function AuthHeader(){
-    const { authTokens, logoutUser} = useMainContext();
-    const [user, setUser] = useState(null);
+    const {user, setUser, logoutUser} = useMainContext();
     const [hideAuth, setHideAuth] = useState(window.innerWidth < 850);
     const navigate = useNavigate();
 
@@ -18,30 +17,12 @@ export default function AuthHeader(){
   }, []);
 
     // Получаем текущего пользователя, если есть токен
-  useEffect(() => {
-    if (!authTokens) return;
 
-    fetch("/api/accounts/user", {
-      headers: {
-        Authorization: `Bearer ${authTokens.access}`,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Не удалось загрузить пользователя");
-        return res.json();
-      })
-      .then((data) => setUser(data))
-      .catch((err) => {
-        console.error(err);
-        setUser(null);
-      });
-  }, [authTokens]);
 
   // Логаут
   const handleLogout = () => {
     logoutUser();
-    setUser(null);
-    navigate("/login");
+    navigate('/')
   };
 
     return <>
