@@ -1,5 +1,5 @@
 from django.core.serializers import serialize
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, Q
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import RetrieveAPIView, ListCreateAPIView
 from rest_framework.views import APIView
@@ -11,8 +11,7 @@ from unidecode import unidecode
 
 from .models import Cart, CartItem, Product, Category, Order, OrderItem, Review
 from .serializers import ProductSerializer, CartItemSerializer, CategorySerializer, OrderCreateSerializer, \
-    OrderListSerializer, OrderDetailSerializer, ReviewSerializer
-
+    OrderListSerializer, OrderDetailSerializer, ReviewSerializer, TopProductSerializer
 
 
 class ListProductAPIView(generics.ListAPIView):
@@ -98,11 +97,29 @@ class CartSyncView(APIView):
 
 class ProductSearchView(APIView):
     def get(self, request):
-        q = request.query_params.get("q", "")
-        print(q)
-        products = Product.objects.filter(name__icontains=q)[:10]
-        serializer = ProductSerializer(products, many=True, context={'request': request})
-        print(serializer.data)
+        q = request.query_params.get("q", "").strip()
+        categories = request.query_params.getlist("category")
+
+        products = Product.objects.all()
+
+        # 🔍 Поиск по тексту
+        if q:
+            products = products.filter(
+                Q(name__icontains=q) |
+                Q(description__icontains=q)
+            )
+
+        # 🗂 Фильтрация по категориям (несколько)
+        if categories:
+            products = products.filter(category__slug__in=categories)
+
+        products = products.distinct()[:20]
+
+        serializer = ProductSerializer(
+            products,
+            many=True,
+            context={"request": request}
+        )
         return Response(serializer.data)
 
 
@@ -234,3 +251,17 @@ class ProductReviewAPIView(ListCreateAPIView):
             product=product,
             user=self.request.user
         )
+
+class TopProductsAPIView(APIView):
+    def get(self, request):
+        products = Product.objects.all()
+        # сортировка: рейтинг, потом количество отзывов
+        products = sorted(
+            products,
+            key=lambda p: (
+                -p.reviews.aggregate(avg_rating=Avg('rating'))['avg_rating'] if p.reviews.exists() else 0,
+                -p.reviews.count()
+            )
+        )[:4]  # топ-4
+        serializer = TopProductSerializer(products, many=True,context={'request':request})
+        return Response(serializer.data)

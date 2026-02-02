@@ -1,8 +1,11 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
+import {useMainContext} from "../pages/MainContext.jsx";
+
 
 export default function CategoryDropdown({ anchorRef, onClose }) {
   const [categories, setCategories] = useState([]);
+  const { selectedCategories, toggleCategory } = useMainContext()
   const [open, setOpen] = useState(true); // открыто по умолчанию
   const [pos, setPos] = useState({ top: 0, left: 0 });
   const dropdownRef = useRef(null);
@@ -84,7 +87,9 @@ export default function CategoryDropdown({ anchorRef, onClose }) {
       )}
       {categories.map((cat) => (
         <li key={cat.id}>
-          <a className="dropdown-item d-flex justify-content-between align-items-center" href="#">
+          <a className={`dropdown-item d-flex justify-content-between align-items-center 
+              ${selectedCategories.find(arr => arr[1] === cat.slug) ? 'bg-primary' : ''}`}
+             onClick={() => toggleCategory([cat.name, cat.slug])}>
             <span>{cat.name}</span>
             {cat.image && (
               <img

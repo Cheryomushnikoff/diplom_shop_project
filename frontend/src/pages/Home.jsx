@@ -6,50 +6,18 @@ import { useMainContext } from "./MainContext";
 export default function Home() {
   const { cartItems, addToCart, setQty } = useMainContext();
   const [topProducts, setTopProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchTopProducts = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get("/api/products/?popular=true");
-      const products = res.data || [];
-
-      // сортировка: сначала по рейтингу, потом по количеству отзывов
-      products.sort((a, b) => {
-        if (b.average_rating !== a.average_rating) {
-          return b.average_rating - a.average_rating;
-        }
-        return b.reviews_count - a.reviews_count;
-      });
-
-      setTopProducts(products.slice(0, 8)); // выводим только топ-8
-    } catch (err) {
-      console.error("Ошибка загрузки топ-товаров:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
+    const fetchTopProducts = async () => {
+      try {
+        const res = await axios.get("/api/products/top/");
+        setTopProducts(res.data);
+      } catch (err) {
+        console.error("Ошибка при загрузке топовых товаров:", err);
+      }
+    };
     fetchTopProducts();
   }, []);
-
-  const renderSkeletons = () =>
-    Array.from({ length: 8 }).map((_, i) => (
-      <div className="col-md-3" key={i}>
-        <div className="card h-100 shadow-sm animate-pulse">
-          <div
-            className="bg-secondary bg-opacity-25"
-            style={{ height: 160 }}
-          ></div>
-          <div className="card-body">
-            <div className="bg-secondary bg-opacity-25 mb-2" style={{ height: 20, width: "80%" }}></div>
-            <div className="bg-secondary bg-opacity-25 mb-2" style={{ height: 16, width: "60%" }}></div>
-            <div className="bg-secondary bg-opacity-25" style={{ height: 24, width: "40%" }}></div>
-          </div>
-        </div>
-      </div>
-    ));
 
   return (
     <div className="container py-4">
@@ -69,72 +37,56 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ПРЕИМУЩЕСТВА */}
+      {/* ТОПОВЫЕ ТОВАРЫ */}
+      <h4 className="mb-3 text-dark">Топовые товары по отзывам</h4>
       <div className="row g-4 mb-5">
-        <div className="col-md-4">
-          <div className="card h-100 shadow-sm border-0">
-            <div className="card-body">
-              <h5 className="card-title">🚚 Быстрая доставка</h5>
-              <p className="card-text text-muted">
-                Отправляем заказы в день оформления
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-md-4">
-          <div className="card h-100 shadow-sm border-0">
-            <div className="card-body">
-              <h5 className="card-title">💳 Удобная оплата</h5>
-              <p className="card-text text-muted">
-                Онлайн-оплата или оплата при получении
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-md-4">
-          <div className="card h-100 shadow-sm border-0">
-            <div className="card-body">
-              <h5 className="card-title">📞 Поддержка</h5>
-              <p className="card-text text-muted">
-                Всегда на связи и готовы помочь
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ТОП-ТОВАРЫ ПО ОТЗЫВАМ */}
-      <h4 className="mb-3 text-dark">Топ-товары по отзывам</h4>
-      <div className="row g-4 mb-5">
-        {loading ? (
-          renderSkeletons()
-        ) : topProducts.length === 0 ? (
-          <p className="text-muted">Товары отсутствуют</p>
+        {topProducts.length === 0 ? (
+          <p className="text-muted">Топовые товары пока не доступны</p>
         ) : (
           topProducts.map((product) => {
             const cartItem = cartItems.find((p) => p.id === product.id);
+
             return (
               <div className="col-md-3" key={product.id}>
                 <div className="card h-100 shadow-sm">
+                  {/* Изображение */}
                   <Link to={`/products/${product.slug}`}>
                     <img
                       src={product.image}
-                      className="card-img-top"
                       alt={product.name}
+                      className="card-img-top"
                       style={{ height: 160, objectFit: "cover" }}
                     />
                   </Link>
+
                   <div className="card-body d-flex flex-column">
-                    <h6 className="card-title">{product.name}</h6>
-                    <p className="text-muted small mb-1">
-                      {product.reviews_count > 0
-                        ? `${product.average_rating.toFixed(1)} ★ (${product.reviews_count})`
-                        : "Нет отзывов"}
-                    </p>
+                    {/* Название товара */}
+                    <Link
+                      to={`/products/${product.slug}`}
+                      className="text-dark text-decoration-none mb-1"
+                    >
+                      <h6 className="card-title">{product.name}</h6>
+                    </Link>
+
+                    {/* Рейтинг */}
+                    <div className="text-warning mb-2 small">
+                      {"★".repeat(Math.round(product.average_rating))}
+                      {"☆".repeat(5 - Math.round(product.average_rating))}
+                      <span className="text-dark ms-1">
+                        ({product.average_rating.toFixed(1)})
+                      </span>
+                    </div>
+
+                    {/* Кол-во отзывов */}
+                    <div className="text-muted small mb-2">
+                      {product.reviews_count} отзыв
+                      {product.reviews_count === 1 ? "" : "ов"}
+                    </div>
+
+                    {/* Цена */}
                     <div className="fw-semibold mb-2">{product.price} ₽</div>
 
+                    {/* ===== КОРЗИНА ===== */}
                     {!cartItem ? (
                       <button
                         className="btn btn-secondary mt-auto"
@@ -143,7 +95,7 @@ export default function Home() {
                         Добавить в корзину
                       </button>
                     ) : (
-                      <div className="d-flex align-items-center gap-2 mt-auto">
+                      <div className="d-flex align-items-center mt-auto gap-2">
                         <button
                           className="btn btn-outline-secondary"
                           onClick={() =>
@@ -182,7 +134,6 @@ export default function Home() {
           </p>
         </div>
       </div>
-
     </div>
   );
 }

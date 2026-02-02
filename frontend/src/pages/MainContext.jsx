@@ -18,6 +18,18 @@ export function MainProvider({ children }) {
         }
     });
 
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [query, setQuery] = useState("");
+
+// Функция для переключения категории (выбор/снятие)
+const toggleCategory = (slug) => {
+    setSelectedCategories((prev) => {
+        if (prev.find(arr => arr[1] === slug[1])) return prev.filter((s) => s[1] !== slug[1]);
+        return [...prev, slug];
+    });
+};
+
+
     const [user, setUser] = useState(null);
     const [cartItems, setCartItems] = useState([]);
 
@@ -154,6 +166,10 @@ export function MainProvider({ children }) {
                 logoutUser,
                 totalPrice,
                 setCartItems,
+                selectedCategories,  // массив выбранных категорий
+                toggleCategory,
+                query,
+                setQuery
             }}
         >
             {children}

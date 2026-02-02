@@ -11,10 +11,15 @@ from datetime import datetime
 class Category(models.Model):
     name = models.CharField(max_length=200, unique=True)
     image = models.ImageField(upload_to='category/')
+    slug = models.SlugField(unique=True, editable=False, )
 
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(unidecode(self.name))
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

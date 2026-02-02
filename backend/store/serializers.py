@@ -32,7 +32,8 @@ class CategorySerializer(serializers.ModelSerializer):
         fields =[
             'id',
             'name',
-            'image'
+            'image',
+            'slug',
         ]
 
 class CartItemSerializer(serializers.ModelSerializer):
@@ -118,3 +119,20 @@ class ReviewSerializer(serializers.ModelSerializer):
             "user_id",
         )
 
+
+class TopProductSerializer(serializers.ModelSerializer):
+    average_rating = serializers.SerializerMethodField()
+    reviews_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Product
+        fields = ["id", "slug", "name", "image", "price", "average_rating", "reviews_count"]
+
+    def get_average_rating(self, obj):
+        reviews = obj.reviews.all()
+        if not reviews.exists():
+            return 0
+        return round(reviews.aggregate(avg_rating=serializers.models.Avg('rating'))['avg_rating'], 1)
+
+    def get_reviews_count(self, obj):
+        return obj.reviews.count()
