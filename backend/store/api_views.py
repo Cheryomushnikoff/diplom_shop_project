@@ -174,6 +174,8 @@ class OrderCreateView(APIView):
         total = 0
         order = Order.objects.create(
             user=user,
+            first_name=serializer.validated_data["first_name"],
+            last_name=serializer.validated_data["last_name"],
             email=serializer.validated_data["email"],
             phone=serializer.validated_data["phone"],
             address=serializer.validated_data["address"],

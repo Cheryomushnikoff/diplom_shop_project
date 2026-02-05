@@ -20,9 +20,11 @@ from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
 from . import settings
+from store.admin import admin_site
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin_site.urls),
     path('api/accounts/', include('users.urls')),
     path('', include('store.urls'))
 ]

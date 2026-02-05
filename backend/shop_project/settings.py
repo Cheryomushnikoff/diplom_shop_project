@@ -233,3 +233,9 @@ JAZZMIN_UI_TWEAKS = {
     },
 }
 
+ADMINS = [
+    ("Admin", "cheremushnikoff@yandex.ru"),
+]
+
+DEFAULT_FROM_EMAIL = "cheremushnikoff@yandex.ru"
+

@@ -5,10 +5,12 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 
 from .models import User
+from store.admin_site import admin_site
+
 
 # Register your models here.
 
-@admin.register(User) #  регистрирует модель в админке.
+@admin.register(User, site=admin_site) #  регистрирует модель в админке.
 class UserAdmin(BaseUserAdmin): #  говорим, что админка должна использовать **UserAdmin**, который наследует поведение Django-админки для пользователей.
     list_display = ("email", "phone", "is_staff", "is_active")  # Эти поля будут показаны в таблице списка пользователей на странице admin → Users.
     list_filter = ("is_staff", "is_active")  #  Фильтры справа на странице списка пользователей.
@@ -28,6 +30,23 @@ class UserAdmin(BaseUserAdmin): #  говорим, что админка дол�
 
     search_fields = ("email", "phone")
     ordering = ("email",)
+
+    # Скрываем от staff
+    def has_module_permission(self, request):
+        return request.user.is_superuser
+
+    def has_view_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+    def has_add_permission(self, request):
+        return request.user.is_superuser
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+
 
 '''
 Этот класс **определяет весь интерфейс управления пользователями в админке**:

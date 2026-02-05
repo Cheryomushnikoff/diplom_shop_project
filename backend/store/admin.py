@@ -1,101 +1,94 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
+from .admin_site import admin_site
 from .models import Category, Product, Order, OrderItem, Review
 
-admin.site.register(Category)
-admin.site.register(Product)
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display = (
+            "id",
+            "slug",
+            "name",
+            "price",
+            "image",
+            "description",
+        )
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug")
+
+
+
+admin_site.register(Category, CategoryAdmin)
+admin_site.register(Product, ProductAdmin)
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
     readonly_fields = ("product", "price", "quantity")
 
-@admin.register(Order)
+
+@admin.register(Order, site=admin_site)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
+        "order_id",
         "customer",
-        "email",
-        "phone",
         "colored_status",
         "total_price",
         "created_at",
     )
 
-    list_filter = (
-        "status",
-        ("created_at", admin.DateFieldListFilter),
-    )
-
-    search_fields = (
-        "id",
-        "email",
-        "phone",
-        "first_name",
-        "last_name",
-    )
-
+    list_filter = ("status", "created_at")
+    search_fields = ("id", "email", "phone")
     ordering = ("-created_at",)
 
-    inlines = [OrderItemInline]
+    def order_id(self, obj):
+        if obj.status == "new":
+            return format_html("<strong>#{} 🔔</strong>", obj.id)
+        return f"#{obj.id}"
 
-    readonly_fields = ("created_at",)
+    order_id.short_description = "Заказ"
 
-    # ---------- КЛИЕНТ ----------
     def customer(self, obj):
-        if obj.user:
-            return obj.user.email
-        return f"{obj.first_name} {obj.last_name}".strip() or "Гость"
+        name = f"{obj.first_name} {obj.last_name}".strip()
+        return name or obj.email
 
     customer.short_description = "Клиент"
 
-    # ---------- ЦВЕТНОЙ СТАТУС ----------
     def colored_status(self, obj):
         colors = {
-            "new": "#dc3545",        # красный
-            "processing": "#ffc107", # жёлтый
-            "paid": "#0d6efd",       # синий
-            "shipped": "#0dcaf0",    # голубой
-            "completed": "#198754",  # зелёный
-            "canceled": "#6c757d",   # серый
+            "new": "red",
+            "processing": "orange",
+            "paid": "aqua",
+            "shipped": "purple",
+            "completed": "green",
+            "canceled": "gray",
         }
-
-        color = colors.get(obj.status, "#6c757d")
-
         return format_html(
-            '<span style="'
-            'padding:4px 8px;'
-            'border-radius:12px;'
-            'color:white;'
-            'background:{};'
-            'font-size:12px;'
-            '">'
-            '{}'
-            '</span>',
-            color,
-            obj.get_status_display()
+            '<b style="color:{}">{}</b>',
+            colors.get(obj.status, "black"),
+            obj.get_status_display(),
         )
 
     colored_status.short_description = "Статус"
 
-    # ---------- ЗАПРЕТ РЕДАКТИРОВАНИЯ ----------
-    def get_readonly_fields(self, request, obj=None):
-        if obj and obj.status in ("paid", "shipped", "completed"):
-            return (
-                "first_name",
-                "last_name",
-                "email",
-                "phone",
-                "address",
-                "total_price",
-                "created_at",
-            )
-        return self.readonly_fields
+    # Скрываем от staff
+    def has_module_permission(self, request):
+        return request.user.is_staff
+
+    def has_view_permission(self, request, obj=None):
+        return request.user.is_staff
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_staff
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_staff
 
 
-
-@admin.register(Review)
+@admin.register(Review, site=admin_site)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = (
         "product",
@@ -106,3 +99,6 @@ class ReviewAdmin(admin.ModelAdmin):
 
     list_filter = ("rating",)
     search_fields = ("product__name", "user__email")
+
+
+

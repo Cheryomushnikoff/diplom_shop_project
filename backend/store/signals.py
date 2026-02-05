@@ -4,6 +4,8 @@ from django.core.mail import EmailMessage
 from django.db import transaction
 from django.template.loader import render_to_string
 from .models import Order, OrderItem
+from shop_project import settings
+
 
 @receiver(pre_save, sender=Order)
 def order_pre_save(sender, instance, **kwargs):
@@ -56,4 +58,37 @@ def order_email_notifications(sender, instance, created, **kwargs):
         email.send(fail_silently=False)
 
     # 🔹 отправляем только после коммита
+    transaction.on_commit(send_email)
+
+@receiver(post_save, sender=Order)
+def admin_notify_new_order(sender, instance, created, **kwargs):
+    if not created or instance.status != "new":
+        return
+
+    def send_email():
+        subject = f"🛒 Новый заказ #{instance.id}"
+
+        body = f"""
+Новый заказ в интернет-магазине
+
+Заказ №: {instance.id}
+Статус: {instance.get_status_display()}
+Сумма: {instance.total_price} ₽
+
+Клиент:
+Имя: {instance.first_name} {instance.last_name}
+Email: {instance.email}
+Телефон: {instance.phone}
+
+Адрес доставки:
+{instance.address}
+        """
+
+        EmailMessage(
+            subject=subject,
+            body=body,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[email for _, email in settings.ADMINS],
+        ).send(fail_silently=True)
+
     transaction.on_commit(send_email)
