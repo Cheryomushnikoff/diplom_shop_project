@@ -21,6 +21,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "jazzmin",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -155,7 +156,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
 }
 
-# 📧 Yandex SMTP
+#  Yandex SMTP
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp.yandex.ru'
@@ -167,3 +168,68 @@ EMAIL_HOST_USER = 'Cheremushnikoff@yandex.ru'
 EMAIL_HOST_PASSWORD = 'eurmwbvxszldkjjt'
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Админка магазина",
+    "site_header": "Интернет-магазин",
+    "site_brand": "Beads-shop",
+    "welcome_sign": "Добро пожаловать в админку Beads-shop",
+
+    "site_logo": "static/img/diamants.gif",   # если есть
+    "login_logo": None,
+
+    "show_sidebar": True,
+    "navigation_expanded": True,
+
+    "search_model": [
+        "store.Product",
+        "store.Order",
+        "auth.User",
+    ],
+
+    "icons": {
+        "auth.User": "fas fa-user",
+        "auth.Group": "fas fa-users",
+
+        "store.Product": "fas fa-box",
+        "store.Category": "fas fa-tags",
+        "store.Order": "fas fa-shopping-cart",
+        "store.OrderItem": "fas fa-list",
+        "store.Review": "fas fa-star",
+    },
+
+    "default_icon_parents": "fas fa-folder",
+    "default_icon_children": "fas fa-file",
+
+    "order_with_respect_to": [
+        "store.Category",
+        "store.Product",
+        "store.Order",
+    ],
+
+    "topmenu_links": [
+        {"name": "Сайт", "url": "/", "new_window": True},
+        {"model": "auth.User"},
+    ],
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "flatly",          # flatly / darkly / minty / sandstone
+    "dark_mode_theme": "darkly",
+
+    "navbar": "navbar-dark",
+    "sidebar": "sidebar-dark-primary",
+
+    "brand_colour": "navbar-dark",
+    "accent": "accent-secondary",
+
+    "button_classes": {
+        "primary": "btn-secondary",
+        "secondary": "btn-outline-secondary",
+        "success": "btn-success",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "info": "btn-info",
+    },
+}
+
