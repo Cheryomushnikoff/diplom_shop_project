@@ -1,0 +1,13 @@
+{% extends "store/email/base_email.html" %}
+{% block title %}Заказ #{{ order.id }} отменён{% endblock %}
+{% block content %}
+    <h2>Создан новый заказ</h2>
+    <p>Номер заказа: <strong>{{ order.id }}</strong></p>
+    <p>Клиент: {% if order.first_name %}{{ order.first_name }} {{ order.last_name }}{% else %}{{ order.email }}{% endif %}</p>
+    <p>Имя:{% if order.first_name %}{{ order.first_name }} {{ order.last_name }}{% else %}{{ order.email }}{% endif %}</p>
+    <p>Почта: {{ order.email }}</p>
+    <p>Адрес: {{ order.address }}</p>
+    <p>Номер: {{ order.phone }}</p>
+
+{% include "store/email/order_items_table.html" with items=order_items total_price=order.total_price %}
+{% endblock %}

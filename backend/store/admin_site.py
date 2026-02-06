@@ -1,4 +1,7 @@
 from django.contrib.admin import AdminSite
+from django.urls import reverse
+from django.utils.safestring import mark_safe
+
 from .models import Order
 from django.contrib import messages
 
@@ -13,14 +16,16 @@ class ShopAdminSite(AdminSite):
         if request.user.is_staff:
             new_orders_count = Order.objects.filter(status="new").count()
             if new_orders_count > 0:
+                # Ссылка с фильтром по новым заказам
+                url = reverse("admin:store_order_changelist") + "?status__exact=new"
+                notif_text = mark_safe(
+                    f'🔔 <a href="{url}">У вас {new_orders_count} новых заказ(а)</a>'
+                )
 
                 existing_messages = [
                     msg.message for msg in messages.get_messages(request)
                     if msg.level == messages.INFO
                 ]
-
-                notif_text = f'🔔 У вас {new_orders_count} новых заказ(а)'
-
                 if notif_text not in existing_messages:
                     messages.add_message(request, messages.INFO, notif_text)
 

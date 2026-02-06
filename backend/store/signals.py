@@ -24,15 +24,14 @@ def order_email_notifications(sender, instance, created, **kwargs):
     """
     Отправка письма ТОЛЬКО после коммита и если заказ реально создан или статус изменился
     """
-    def send_email():
+    def send_emails():
         # Получаем все товары заказа
         order_items = OrderItem.objects.filter(order=instance)
         if not order_items.exists():
             # Если товаров нет — не отправляем письмо
             return
 
-        # Шаблоны по статусу
-        status_templates = {
+        user_templates = {
             "new": "store/email/order_new.html",
             "processing": "store/email/order_processing.html",
             "paid": "store/email/order_paid.html",
@@ -40,55 +39,48 @@ def order_email_notifications(sender, instance, created, **kwargs):
             "completed": "store/email/order_completed.html",
             "canceled": "store/email/order_canceled.html",
         }
-        template = status_templates.get(instance.status, "store/email/order_new.html")
-        subject = f"Заказ #{instance.id} — {instance.get_status_display()}"
 
-        html_message = render_to_string(template, {
-            "order": instance,
-            "order_items": order_items,
-        })
+        user_template = user_templates.get(
+            instance.status,
+            "store/email/order_new.html"
+        )
 
-        email = EmailMessage(
-            subject=subject,
-            body=html_message,
-            from_email=None,  # DEFAULT_FROM_EMAIL
+        user_html = render_to_string(
+            user_template,
+            {
+                "order": instance,
+                "order_items": order_items,
+            }
+        )
+
+        user_email = EmailMessage(
+            subject=f"Заказ #{instance.id} — {instance.get_status_display()}",
+            body=user_html,
+            from_email=settings.DEFAULT_FROM_EMAIL,
             to=[instance.email],
         )
-        email.content_subtype = "html"
-        email.send(fail_silently=False)
+        user_email.content_subtype = "html"
+        user_email.send(fail_silently=False)
 
-    # 🔹 отправляем только после коммита
-    transaction.on_commit(send_email)
+        if instance.status == 'new':
+            admin_html = render_to_string(
+                "store/email/admin_new_order.html",
+                {
+                    "order": instance,
+                    "order_items": order_items,
+                }
+            )
+            print('дошли')
+            admin_email = EmailMessage(
+                subject=f"🛒 Новый заказ #{instance.id}",
+                body=admin_html,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[email for _, email in settings.ADMINS],
+            )
+            admin_email.content_subtype = "html"
+            admin_email.send(fail_silently=False)
 
-@receiver(post_save, sender=Order)
-def admin_notify_new_order(sender, instance, created, **kwargs):
-    if not created or instance.status != "new":
-        return
 
-    def send_email():
-        subject = f"🛒 Новый заказ #{instance.id}"
+    transaction.on_commit(send_emails)
 
-        body = f"""
-Новый заказ в интернет-магазине
 
-Заказ №: {instance.id}
-Статус: {instance.get_status_display()}
-Сумма: {instance.total_price} ₽
-
-Клиент:
-Имя: {instance.first_name} {instance.last_name}
-Email: {instance.email}
-Телефон: {instance.phone}
-
-Адрес доставки:
-{instance.address}
-        """
-
-        EmailMessage(
-            subject=subject,
-            body=body,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[email for _, email in settings.ADMINS],
-        ).send(fail_silently=True)
-
-    transaction.on_commit(send_email)
