@@ -25,8 +25,8 @@ from store.admin import admin_site
 
 urlpatterns = [
     path("admin/", admin_site.urls),
+    path('api/', include('store.urls')),
     path('api/accounts/', include('users.urls')),
-    path('', include('store.urls'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -24,22 +24,14 @@ class ListCategoryAPIView(generics.ListAPIView):
     serializer_class = CategorySerializer
 
 
-class CartViewSet(viewsets.ModelViewSet):
-    serializer_class = CartItemSerializer
+class CartViewSet(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
+    def get(self, request):
         cart, _ = Cart.objects.get_or_create(user=self.request.user)
-        print(cart)
-        return CartItem.objects.filter(cart=cart)
-
-    def perform_create(self, serializer):
-        cart = Cart.objects.create(user=self.request.user)
-        serializer.save(cart=cart)
-
-    def perform_update(self, serializer):
-        cart = Cart.objects.get(user=self.request.user)
-        serializer.save(cart=cart)
+        items = CartItem.objects.filter(cart=cart)
+        serializer = CartItemSerializer(items, many=True)
+        return Response(serializer.data)
 
 
 class CartSyncView(APIView):
@@ -102,14 +94,14 @@ class ProductSearchView(APIView):
 
         products = Product.objects.all()
 
-        # 🔍 Поиск по тексту
+        #  Поиск по тексту
         if q:
             products = products.filter(
                 Q(name__icontains=q) |
                 Q(description__icontains=q)
             )
 
-        # 🗂 Фильтрация по категориям (несколько)
+        #  Фильтрация по категориям
         if categories:
             products = products.filter(category__slug__in=categories)
 
