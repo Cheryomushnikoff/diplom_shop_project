@@ -5,6 +5,7 @@ import {
     loadGuestCart,
     saveGuestCart,
 } from "./helpers/cartStorage";
+import {useNavigate} from "react-router-dom";
 
 const MainContext = createContext();
 
@@ -52,12 +53,14 @@ const toggleCategory = (slug) => {
             clearGuestCart();
         }
     };
+    const navigate = useNavigate();
 
     const logoutUser = () => {
         localStorage.removeItem("authTokens");
         setAuthTokens(null);
         setUser(null);
         setCartItems([]);
+        navigate('')
     };
 
     /* ---------------- USER ---------------- */
