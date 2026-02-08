@@ -35,7 +35,7 @@ export default function AuthHeader() {
                         </a>
                         <ul className="dropdown-menu custom-dropdown-menu-auth-mobile">
                             <li><span className="dropdown-item auth-item"><Link
-                                to='/profile'>{user.name || user.email}</Link></span></li>
+                                to='/profile'>{user.first_name || user.email}</Link></span></li>
                             <li>
                                 <button className="dropdown-item auth-item" onClick={handleLogout}>Выход</button>
                             </li>
@@ -47,7 +47,7 @@ export default function AuthHeader() {
                   <span className="nav-link custom-link userSpan">
                     <i className="bi bi-person-circle"></i>
                       <Link to='/profile'>
-                          {user.name || (user.email.length > 15 ? user.email.slice(0, 4) + '...' : user.email)}
+                          {user.first_name || (user.email.length > 15 ? user.email.slice(0, 4) + '...' : user.email)}
                       </Link>
                   </span>
                         </li>

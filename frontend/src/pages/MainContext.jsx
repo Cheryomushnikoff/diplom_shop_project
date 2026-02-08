@@ -78,7 +78,7 @@ const toggleCategory = (slug) => {
         if (!authTokens) return;
 
         apiClient
-            .get("accounts/user/")
+            .get("/accounts/profile/")
             .then((res) => setUser(res.data))
             .catch(() => logoutUser());
     }, [authTokens]);
@@ -170,6 +170,7 @@ const toggleCategory = (slug) => {
             value={{
                 authTokens,
                 user,
+                setUser,
                 cartItems,
                 addToCart,
                 removeFromCart,
