@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import OrdersTab from "./orders/OrdersTab.jsx";
+import ApiClient from "./helpers/apiClient.js";
+import {useMainContext} from "./MainContext.jsx";
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -10,24 +12,33 @@ export default function ProfilePage() {
   const [message, setMessage] = useState("");
   const [passwordData, setPasswordData] = useState({ old_password: "", new_password: "", confirm_password: "" });
   const [passwordMessage, setPasswordMessage] = useState("");
+  const {logoutUser} = useMainContext()
 
   const token = JSON.parse(localStorage.getItem("authTokens"))?.access;
 
   // Получение профиля
   useEffect(() => {
-    axios.get("/api/accounts/profile/", { headers: { Authorization: `Bearer ${token}` } })
-      .then(res => { setUser(res.data); setFormData(res.data); })
-      .catch(err => console.error(err));
+      ApiClient
+        .get("/accounts/profile/")
+        .then(res => { setUser(res.data); setFormData(res.data); })
+        .catch(err => {
+            console.error(err);
+            logoutUser();
+      });
   }, []);
 
   // Получение истории заказов
-  useEffect(() => {
-    if (activeTab === "orders") {
-      axios.get("/api/orders/history/", { headers: { Authorization: `Bearer ${token}` } })
-        .then(res => setOrders(res.data))
-        .catch(err => console.error(err));
-    }
-  }, [activeTab]);
+  // useEffect(() => {
+  //   if (activeTab === "orders") {
+  //     ApiClient
+  //           .get("/orders/history/")
+  //           .then(res => setOrders(res.data))
+  //           .catch(err => {
+  //               console.error(err)
+  //               logoutUser();
+  //           });
+  //   }
+  // }, [activeTab]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -42,7 +53,8 @@ export default function ProfilePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put("/api/accounts/profile/", formData, { headers: { Authorization: `Bearer ${token}` } });
+      await ApiClient
+          .put("/accounts/profile/", formData);
       setMessage("Профиль успешно обновлён!");
     } catch {
       setMessage("Ошибка обновления профиля");
@@ -57,10 +69,12 @@ export default function ProfilePage() {
       return;
     }
     try {
-      await axios.post("/api/accounts/change_password/", passwordData, { headers: { Authorization: `Bearer ${token}` } });
+      await ApiClient
+          .post("/accounts/change_password/", passwordData);
       setPasswordMessage("Пароль успешно изменён!");
       setPasswordData({ old_password: "", new_password: "", confirm_password: "" });
     } catch {
+        logoutUser();
       setPasswordMessage("Ошибка смены пароля");
     }
   };

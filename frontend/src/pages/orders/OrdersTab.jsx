@@ -1,20 +1,21 @@
 import {useEffect, useState} from "react";
 import {useMainContext} from "../MainContext.jsx";
 import OrderDetail from "./OrderDetail.jsx";
+import ApiClient from "../helpers/apiClient.js";
 
 export default function OrdersTab() {
   const [orders, setOrders] = useState([]);
   const [activeId, setActiveId] = useState(null);
-  const {authTokens} = useMainContext()
+  const {authTokens, logoutUser} = useMainContext()
 
   useEffect(() => {
-    fetch("/api/orders/", {
-      headers: {
-        Authorization: `Bearer ${authTokens.access}`,
-      },
-    })
-      .then(res => res.json())
-      .then(setOrders);
+      ApiClient
+          .get("/orders/")
+          .then(res => setOrders(res.data))
+          .catch(err => {
+              console.log(err);
+              logoutUser()
+          })
   }, []);
 
   return (

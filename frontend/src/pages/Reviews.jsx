@@ -1,15 +1,14 @@
 import {useEffect, useState} from "react";
+import ApiClient from "./helpers/apiClient.js";
 
 export default function Reviews({slug}) {
     const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
-        fetch(`/api/products/${slug}/reviews/`)
+        ApiClient
+            .get(`/products/${slug}/reviews/`)
             .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setReviews(data)
-            });
+            .then(res => setReviews(res.data));
     }, [slug]);
 
     if (!reviews.length) {

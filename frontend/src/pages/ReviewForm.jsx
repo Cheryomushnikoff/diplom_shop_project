@@ -1,7 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
+import ApiClient from "./helpers/apiClient.js";
 
-export default function ReviewForm({ slug, token, onSuccess }) {
+export default function ReviewForm({ slug, token, onSuccess, logoutUser }) {
   const [rating, setRating] = useState(5);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -11,14 +11,10 @@ export default function ReviewForm({ slug, token, onSuccess }) {
     setLoading(true);
 
     try {
-      await axios.post(
-        `/api/products/${slug}/reviews/`,
-        { rating, text },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      await ApiClient
+          .post(
+        `/products/${slug}/reviews/`,
+        { rating, text }
       );
 
       setRating(5);
@@ -26,6 +22,7 @@ export default function ReviewForm({ slug, token, onSuccess }) {
       onSuccess(); // 🔥 обновляем отзывы
     } catch (e) {
       console.error("Ошибка добавления отзыва", e);
+      logoutUser();
     } finally {
       setLoading(false);
     }

@@ -1,21 +1,18 @@
 import {useEffect, useState} from "react";
 import {useMainContext} from "../MainContext.jsx";
+import ApiClient from "../helpers/apiClient.js";
 
 export default function OrderDetail({orderId}) {
     const [order, setOrder] = useState(null);
-    const {authTokens} = useMainContext()
+    const {authTokens, logoutUser} = useMainContext()
 
     useEffect(() => {
-        fetch(`/api/orders/${orderId}/`, {
-            headers: {
-                Authorization: `Bearer ${authTokens.access}`,
-            },
-        })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-                setOrder(data)
-            });
+        ApiClient.get(`/orders/${orderId}/`)
+            .then(res => setOrder(res.data))
+            .catch(err => {
+                console.log(err);
+                logoutUser()
+            })
     }, [orderId]);
 
     if (!order) return null;

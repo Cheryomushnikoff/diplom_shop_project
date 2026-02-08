@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {useMainContext} from "../pages/MainContext.jsx";
-import axios from "axios";
+import ApiClient from "./helpers/apiClient.js";
 
 export default function CheckoutPage() {
     const {
@@ -8,6 +8,7 @@ export default function CheckoutPage() {
         cartItems,
         totalPrice,
         authTokens,
+        logoutUser
     } = useMainContext();
 
     const [form, setForm] = useState({
@@ -22,11 +23,10 @@ export default function CheckoutPage() {
 
     useEffect(() => {
         if (authTokens) {
-            axios.get("/api/accounts/profile/", {headers: {Authorization: `Bearer ${authTokens.access}`}})
-                .then(res => {
-                    setUser(res.data);
-                })
-                .catch(err => console.error(err));
+            ApiClient
+                .get("/accounts/profile/")
+                .then(res => setUser(res.data))
+                .catch(() => logoutUser());
         }
     }, []);
 
@@ -67,23 +67,14 @@ export default function CheckoutPage() {
         };
 
         try {
-            const res = await fetch("/api/orders/create/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    ...(authTokens && {
-                        Authorization: `Bearer ${authTokens.access}`,
-                    }),
-                },
-                body: JSON.stringify(payload),
-            });
-
-            if (!res.ok) throw new Error("Ошибка оформления");
+            await ApiClient
+                .post("/orders/create/", JSON.stringify(payload));
 
             setCartItems([]);
             setSuccess(true);
         } catch (err) {
             alert("Не удалось оформить заказ");
+            logoutUser();
         } finally {
             setLoading(false);
         }
