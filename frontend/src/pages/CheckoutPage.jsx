@@ -1,5 +1,5 @@
-import {useEffect, useState} from "react";
-import {useMainContext} from "../pages/MainContext.jsx";
+import { useEffect, useState } from "react";
+import { useMainContext } from "../pages/MainContext.jsx";
 import ApiClient from "./helpers/apiClient.js";
 
 export default function CheckoutPage() {
@@ -20,6 +20,11 @@ export default function CheckoutPage() {
     });
 
     const [user, setUser] = useState(null);
+    const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
+
+    /* ---------- загрузка профиля ---------- */
 
     useEffect(() => {
         if (authTokens) {
@@ -30,10 +35,6 @@ export default function CheckoutPage() {
         }
     }, []);
 
-    const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
-
-    // автозаполнение для авторизованного пользователя
     useEffect(() => {
         if (user) {
             setForm({
@@ -46,20 +47,49 @@ export default function CheckoutPage() {
         }
     }, [user]);
 
+    /* ---------- helpers ---------- */
+
     const handleChange = (e) => {
         setForm({
             ...form,
             [e.target.name]: e.target.value,
         });
+        setErrors({
+            ...errors,
+            [e.target.name]: null,
+        });
     };
 
+    const validateForm = () => {
+        const newErrors = {};
+
+        if (!form.first_name.trim()) newErrors.first_name = "Введите имя";
+        if (!form.last_name.trim()) newErrors.last_name = "Введите фамилию";
+
+        if (!form.email.trim()) {
+            newErrors.email = "Введите email";
+        } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
+            newErrors.email = "Некорректный email";
+        }
+
+        if (!form.phone.trim()) newErrors.phone = "Введите телефон";
+        if (!form.address.trim()) newErrors.address = "Введите адрес доставки";
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    /* ---------- submit ---------- */
+
     const submitOrder = async () => {
+        if (!validateForm()) return;
+
         setLoading(true);
 
         const payload = {
             ...form,
             items: authTokens
-                ? undefined // для авторизованного корзина на сервере
+                ? undefined
                 : cartItems.map(item => ({
                     product_id: item.id,
                     quantity: item.quantity,
@@ -67,18 +97,19 @@ export default function CheckoutPage() {
         };
 
         try {
-            await ApiClient
-                .post("/orders/create/", JSON.stringify(payload));
-
+            await ApiClient.post("/orders/create/", JSON.stringify(payload));
             setCartItems([]);
             setSuccess(true);
-        } catch (err) {
-            alert("Не удалось оформить заказ");
-            logoutUser();
+        } catch {
+            setErrors({
+                global: "Не удалось оформить заказ. Попробуйте позже.",
+            });
         } finally {
             setLoading(false);
         }
     };
+
+    /* ---------- success ---------- */
 
     if (success) {
         return (
@@ -91,12 +122,14 @@ export default function CheckoutPage() {
         );
     }
 
+    /* ---------- render ---------- */
+
     return (
         <div className="container py-4">
             <h3 className="mb-4">Оформление заказа</h3>
 
             <div className="row g-4">
-                {/* === Левая колонка: данные === */}
+                {/* Левая колонка */}
                 <div className="col-lg-7">
                     <div className="card p-3">
                         <h5 className="mb-3">Данные покупателя</h5>
@@ -105,52 +138,67 @@ export default function CheckoutPage() {
                             <div className="col-md-6 mb-2">
                                 <input
                                     name="first_name"
-                                    className="form-control"
+                                    className={`form-control ${errors.first_name ? "is-invalid" : ""}`}
                                     placeholder="Имя"
                                     value={form.first_name}
                                     onChange={handleChange}
                                 />
+                                <div className="invalid-feedback">
+                                    {errors.first_name}
+                                </div>
                             </div>
 
                             <div className="col-md-6 mb-2">
                                 <input
                                     name="last_name"
-                                    className="form-control"
+                                    className={`form-control ${errors.last_name ? "is-invalid" : ""}`}
                                     placeholder="Фамилия"
                                     value={form.last_name}
                                     onChange={handleChange}
                                 />
+                                <div className="invalid-feedback">
+                                    {errors.last_name}
+                                </div>
                             </div>
                         </div>
 
                         <input
                             name="email"
-                            className="form-control mb-2"
+                            className={`form-control mb-2 ${errors.email ? "is-invalid" : ""}`}
                             placeholder="Email"
                             value={form.email}
                             onChange={handleChange}
                         />
+                        <div className="invalid-feedback d-block">
+                            {errors.email}
+                        </div>
 
                         <input
                             name="phone"
-                            className="form-control mb-2"
+                            className={`form-control mb-2 ${errors.phone ? "is-invalid" : ""}`}
                             placeholder="Телефон"
                             value={form.phone}
                             onChange={handleChange}
                         />
+                        <div className="invalid-feedback d-block">
+                            {errors.phone}
+                        </div>
 
                         <textarea
                             name="address"
-                            className="form-control"
+                            className={`form-control ${errors.address ? "is-invalid" : ""}`}
                             rows={3}
                             placeholder="Адрес доставки"
                             value={form.address}
                             onChange={handleChange}
                         />
+                        <div className="invalid-feedback d-block">
+                            {errors.address}
+                        </div>
                     </div>
                 </div>
 
-                {/* === Правая колонка: заказ === */}
+                {/* Правая колонка */}
                 <div className="col-lg-5">
                     <div className="card p-3">
                         <h5 className="mb-3">Ваш заказ</h5>
@@ -172,12 +220,18 @@ export default function CheckoutPage() {
                             </div>
                         ))}
 
-                        <hr/>
+                        <hr />
 
                         <div className="d-flex justify-content-between fw-bold mb-3">
                             <span>Итого:</span>
                             <span>{totalPrice} ₽</span>
                         </div>
+
+                        {errors.global && (
+                            <div className="alert alert-danger">
+                                {errors.global}
+                            </div>
+                        )}
 
                         <button
                             className="btn btn-secondary w-100"
@@ -192,3 +246,4 @@ export default function CheckoutPage() {
         </div>
     );
 }
+

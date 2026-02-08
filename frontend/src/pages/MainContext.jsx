@@ -43,13 +43,22 @@ const toggleCategory = (slug) => {
         const guestCart = loadGuestCart();
 
         if (guestCart.length) {
-            await apiClient.post(
+            await apiClient
+                .post(
                 "cart/merge/",
                 guestCart.map((p) => ({
                     product_id: p.id,
                     quantity: p.quantity,
-                }))
-            );
+                })))
+                .then(res => {
+                    const normalized = res.data.map((item) => ({
+                        ...item.product,
+                        quantity: item.quantity,
+                        cart_id: item.id,
+                    }));
+                    setCartItems(normalized);
+                })
+
             clearGuestCart();
         }
     };

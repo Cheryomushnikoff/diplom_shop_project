@@ -139,7 +139,10 @@ class CartMergeView(APIView):
                 cart_item.quantity += qty
                 cart_item.save()
 
-        return Response({"status": "merged"})
+            cart_items = CartItem.objects.filter(cart=cart)
+            serializer = CartItemSerializer(cart_items, many=True)
+
+        return Response(serializer.data)
 
 class OrderCreateView(APIView):
     permission_classes = [AllowAny]
