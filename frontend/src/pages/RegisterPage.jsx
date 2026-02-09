@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState } from "react";
 import axios from "axios";
 
 export default function RegisterPage() {
@@ -6,63 +6,75 @@ export default function RegisterPage() {
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [error, setError] = useState("");
-    const [register, setRegister ] = useState(false);
+    const [register, setRegister] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const errRender = (obj) => {
-        return Object.values(obj).reduce((accum, cur) => {
-            return accum + '/n' + cur
-        })
+    const formatErrors = (obj) => {
+        if (typeof obj === "string") return obj;
 
-    }
+        return Object.values(obj)
+            .flat()
+            .join("\n");
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Проверка совпадения паролей на клиенте
         if (password !== passwordConfirm) {
             setError("Пароли не совпадают");
             return;
         }
 
+        setError("");
+        setIsLoading(true);
+
         try {
-            // Отправка данных на бэкенд
             await axios.post("/api/accounts/register/", {
                 email,
                 password,
             });
-            setRegister(true)
-            // Редирект на страницу логина после успешной регистрации
+
+            setRegister(true);
         } catch (err) {
-            console.error(err);
-            if (err.response && err.response.data) {
-                setError(errRender(err.response.data));
+            if (err.response?.data) {
+                setError(formatErrors(err.response.data));
             } else {
                 setError("Ошибка регистрации");
             }
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    return (register) ?
-            (
-                <div className="container py-5 text-center">
-                    <h3>Спасибо за регистрацию 🎉</h3>
-                    <p className="text-muted mt-2">
-                        Ссылка на подтверждение email отправлена на {email}
-                    </p>
-                </div>
-            ) :
-        (
+    if (register) {
+        return (
+            <div className="container py-5 text-center">
+                <h3>Спасибо за регистрацию 🎉</h3>
+                <p className="text-muted mt-2">
+                    Ссылка на подтверждение email отправлена на <b>{email}</b>
+                </p>
+            </div>
+        );
+    }
+
+    return (
         <div
             className="d-flex justify-content-center align-items-center"
-            style={{backgroundColor: "#f5f5f5",height: "600px"}}
+            style={{ backgroundColor: "#f5f5f5", height: "600px" }}
         >
             <div
                 className="card shadow p-4"
-                style={{width: "400px", borderRadius: "10px"}}
+                style={{ width: "400px", borderRadius: "10px" }}
             >
-                <h4 className="text-center mb-4 text-secondary">Регистрация</h4>
+                <h4 className="text-center mb-4 text-secondary">
+                    Регистрация
+                </h4>
 
-                {error && <div className="alert alert-danger">{error}</div>}
+                {error && (
+                    <div className="alert alert-danger" style={{ whiteSpace: "pre-line" }}>
+                        {error}
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
@@ -73,6 +85,7 @@ export default function RegisterPage() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            disabled={isLoading}
                         />
                     </div>
 
@@ -84,22 +97,41 @@ export default function RegisterPage() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
+                            disabled={isLoading}
                         />
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label">Подтверждение пароля</label>
+                        <label className="form-label">
+                            Подтверждение пароля
+                        </label>
                         <input
                             type="password"
                             className="form-control"
                             value={passwordConfirm}
                             onChange={(e) => setPasswordConfirm(e.target.value)}
                             required
+                            disabled={isLoading}
                         />
                     </div>
 
-                    <button type="submit" className="btn btn-secondary w-100 mt-3">
-                        Зарегистрироваться
+                    <button
+                        type="submit"
+                        className="btn btn-secondary w-100 mt-3"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <>
+                                <span
+                                    className="spinner-border spinner-border-sm me-2"
+                                    role="status"
+                                    aria-hidden="true"
+                                />
+                                Регистрация…
+                            </>
+                        ) : (
+                            "Зарегистрироваться"
+                        )}
                     </button>
                 </form>
 

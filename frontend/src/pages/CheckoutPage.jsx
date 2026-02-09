@@ -238,7 +238,16 @@ export default function CheckoutPage() {
                             onClick={submitOrder}
                             disabled={loading || cartItems.length === 0}
                         >
-                            {loading ? "Оформляем..." : "Оформить заказ"}
+                            {loading ? (
+                            <>
+                                <span
+                                    className="spinner-border spinner-border-sm me-2"
+                                    role="status"
+                                    aria-hidden="true"
+                                />
+                                Оформляем…
+                            </>
+                        )  : "Оформить заказ"}
                         </button>
                     </div>
                 </div>
