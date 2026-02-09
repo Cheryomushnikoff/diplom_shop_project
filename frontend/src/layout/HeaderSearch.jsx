@@ -14,28 +14,33 @@ export default function HeaderSearch() {
   const lastUrlRef = useRef(""); // 🔒 защита от зацикливания
   const isMobile = window.innerWidth < 750;
 
-  useEffect(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
+    useEffect(() => {
+        if (!query.trim() && selectedCategories.length === 0) {
+            return; // ⛔ ничего не делаем
+        }
 
-    debounceRef.current = setTimeout(() => {
-      const params = new URLSearchParams();
+        if (debounceRef.current) clearTimeout(debounceRef.current);
 
-      if (query.trim()) params.set("q", query.trim());
+        debounceRef.current = setTimeout(() => {
+            const params = new URLSearchParams();
 
-      selectedCategories.forEach((cat) =>
-        params.append("category", cat[1])
-      );
+            if (query.trim()) params.set("q", query.trim());
 
-      const nextUrl = `/products?${params.toString()}`;
+            selectedCategories.forEach((cat) =>
+                params.append("category", cat[1])
+            );
 
-      if (nextUrl === lastUrlRef.current) return; // ⛔ стоп
+            const nextUrl = `/products?${params.toString()}`;
 
-      lastUrlRef.current = nextUrl;
-      navigate(nextUrl, { replace: true });
-    }, 400);
+            if (nextUrl === lastUrlRef.current) return;
 
-    return () => clearTimeout(debounceRef.current);
-  }, [query, selectedCategories, navigate]);
+            lastUrlRef.current = nextUrl;
+            navigate(nextUrl, {replace: true});
+        }, 400);
+
+        return () => clearTimeout(debounceRef.current);
+    }, [query, selectedCategories, navigate]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

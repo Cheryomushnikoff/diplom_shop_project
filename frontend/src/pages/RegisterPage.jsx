@@ -1,5 +1,4 @@
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 export default function RegisterPage() {
@@ -7,7 +6,14 @@ export default function RegisterPage() {
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [error, setError] = useState("");
-    const navigate = useNavigate();
+    const [register, setRegister ] = useState(false);
+
+    const errRender = (obj) => {
+        return Object.values(obj).reduce((accum, cur) => {
+            return accum + '/n' + cur
+        })
+
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,20 +30,28 @@ export default function RegisterPage() {
                 email,
                 password,
             });
-
+            setRegister(true)
             // Редирект на страницу логина после успешной регистрации
-            navigate("/login");
         } catch (err) {
             console.error(err);
             if (err.response && err.response.data) {
-                setError(JSON.stringify(err.response.data));
+                setError(errRender(err.response.data));
             } else {
                 setError("Ошибка регистрации");
             }
         }
     };
 
-    return (
+    return (register) ?
+            (
+                <div className="container py-5 text-center">
+                    <h3>Спасибо за регистрацию 🎉</h3>
+                    <p className="text-muted mt-2">
+                        Ссылка на подтверждение email отправлена на {email}
+                    </p>
+                </div>
+            ) :
+        (
         <div
             className="d-flex justify-content-center align-items-center"
             style={{backgroundColor: "#f5f5f5",height: "600px"}}

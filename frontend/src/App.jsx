@@ -8,6 +8,7 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 import CheckoutPage from "./pages/CheckoutPage.jsx";
 import Home from "./pages/Home.jsx";
 import ProductPage from "./pages/ProductPage.jsx";
+import VerifyPage from "./pages/VerifyPage.jsx";
 
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
                     <Route path="/register" element={<RegisterPage/>}/>
                     <Route path="/profile" element={<ProfilePage/>}/>
                     <Route path="/checkout" element={<CheckoutPage/>} />
+                    <Route path="/email-verified" element={<VerifyPage/>} />
                     <Route path="/" element={<Home/>} />
                 </Routes>
             </Layout>

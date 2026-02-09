@@ -1,4 +1,9 @@
-from rest_framework import generics, permissions
+from django.conf import settings
+from django.shortcuts import redirect
+from rest_framework import generics, permissions, status
+from rest_framework.views import APIView
+
+from .models import EmailVerificationToken
 from .serializers import RegisterSerializer, UserSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -69,3 +74,31 @@ def change_password(request):
     user.set_password(new)
     user.save()
     return Response({"status": "Пароль успешно изменён"})
+
+class VerifyEmailView(APIView):
+    permission_classes = []
+
+    def get(self, request):
+        token = request.query_params.get("token")
+
+        if not token:
+            return Response(
+                {"detail": "Токен не передан"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            verification = EmailVerificationToken.objects.get(token=token)
+        except EmailVerificationToken.DoesNotExist:
+            return Response(
+                {"detail": "Неверный или устаревший токен"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = verification.user
+        user.is_active = True
+        user.save()
+
+        verification.delete()
+
+        return redirect(f"{settings.FRONTEND_URL}/email-verified")

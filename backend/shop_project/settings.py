@@ -175,7 +175,7 @@ JAZZMIN_SETTINGS = {
     "site_brand": "Beads-shop",
     "welcome_sign": "Добро пожаловать в админку Beads-shop",
 
-    "site_logo": "static/img/diamants.gif",   # если есть
+    "site_logo": "/img/diamants.gif",   # если есть
     "login_logo": None,
 
     "show_sidebar": True,
@@ -238,4 +238,6 @@ ADMINS = [
 ]
 
 DEFAULT_FROM_EMAIL = "cheremushnikoff@yandex.ru"
+
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://127.0.0.1:5173")
 

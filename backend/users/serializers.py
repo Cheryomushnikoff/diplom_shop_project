@@ -1,6 +1,10 @@
+from django.conf import settings
+from django.core.mail import EmailMessage
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from .models import EmailVerificationToken
 
 User = get_user_model()
 
@@ -39,6 +43,11 @@ User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    email = serializers.EmailField(
+        error_messages={
+            "unique": "Пользователь с таким email уже зарегистрирован"
+        }
+    )
 
     class Meta:
         model = User
@@ -68,8 +77,27 @@ class RegisterSerializer(serializers.ModelSerializer):
             password=password,
             **validated_data
         )
+        token = EmailVerificationToken.objects.create(user=user)
+
+        verify_url = f"{settings.FRONTEND_URL}/api/accounts/verify-email?token={token.token}"
+
+        html = f"""
+               <h2>Подтверждение email</h2>
+               <p>Для активации аккаунта нажмите:</p>
+               <a href="{verify_url}">Подтвердить email</a>
+               """
+
+        email_message = EmailMessage(
+            subject="Подтверждение регистрации",
+            body=html,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[user.email],
+        )
+        email_message.content_subtype = "html"
+        email_message.send()
 
         return user
+
 
 
 class UserSerializer(serializers.ModelSerializer):
