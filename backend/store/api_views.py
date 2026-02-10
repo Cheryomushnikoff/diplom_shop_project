@@ -12,6 +12,7 @@ from unidecode import unidecode
 from .models import Cart, CartItem, Product, Category, Order, OrderItem, Review
 from .serializers import ProductSerializer, CartItemSerializer, CategorySerializer, OrderCreateSerializer, \
     OrderListSerializer, OrderDetailSerializer, ReviewSerializer, TopProductSerializer
+from .services.order_status import can_cancel_order
 
 
 class ListProductAPIView(generics.ListAPIView):
@@ -235,6 +236,30 @@ class ProductDetailAPIView(APIView):
         product = get_object_or_404(Product, slug=slug)
         return Response(
             ProductSerializer(product, context={'request': request}).data
+        )
+
+class CancelOrderAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        order = get_object_or_404(
+            Order,
+            pk=pk,
+            user=request.user
+        )
+
+        if not can_cancel_order(order):
+            return Response(
+                {"detail": "Этот заказ нельзя отменить"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        order.status = "canceled"
+        order.save()
+
+        return Response(
+            {"detail": "Заказ успешно отменён"},
+            status=status.HTTP_200_OK
         )
 
 class ProductReviewAPIView(ListCreateAPIView):

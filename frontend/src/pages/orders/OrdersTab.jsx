@@ -6,16 +6,18 @@ import ApiClient from "../helpers/apiClient.js";
 export default function OrdersTab() {
   const [orders, setOrders] = useState([]);
   const [activeId, setActiveId] = useState(null);
-  const {authTokens, logoutUser} = useMainContext()
-
-  useEffect(() => {
-      ApiClient
+  const {logoutUser} = useMainContext()
+    const fetchOrders = async () => {
+    await ApiClient
           .get("/orders/")
           .then(res => setOrders(res.data))
           .catch(err => {
               console.log(err);
               logoutUser()
           })
+};
+  useEffect(() => {
+    fetchOrders()
   }, []);
 
   return (
@@ -41,7 +43,7 @@ export default function OrdersTab() {
       </div>
 
       <div className="col-md-7">
-        {activeId && <OrderDetail orderId={activeId} />}
+        {activeId && <OrderDetail orderId={activeId} onUpdate={fetchOrders} />}
       </div>
     </div>
   );

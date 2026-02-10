@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {useMainContext} from "./MainContext.jsx";
 
 export default function PaymentSuccessPage() {
     const navigate = useNavigate();
+    const { authToken } = useMainContext()
 
     useEffect(() => {
         // можно очистить корзину
@@ -19,12 +21,12 @@ export default function PaymentSuccessPage() {
             </p>
 
             <div className="mt-4 d-flex justify-content-center gap-3">
-                <button
+                {authToken?.access && <button
                     className="btn btn-secondary"
                     onClick={() => navigate("/profile?tab=orders")}
                 >
                     Мои заказы
-                </button>
+                </button>}
 
                 <button
                     className="btn btn-outline-secondary"

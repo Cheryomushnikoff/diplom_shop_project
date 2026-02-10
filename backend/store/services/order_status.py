@@ -19,3 +19,6 @@ def mark_order_paid(order):
 
     order.status = "paid"
     order.save()
+
+def can_cancel_order(order):
+    return order.status in ["new"]
