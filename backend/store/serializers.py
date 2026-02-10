@@ -1,10 +1,14 @@
 from django.db.models import Avg
 from rest_framework import serializers
 from .models import Product, CartItem, Category, Order, OrderItem, Review
+from .utils import user_paid_review, user_retry_review
+
 
 class ProductSerializer(serializers.ModelSerializer):
     average_rating = serializers.SerializerMethodField()
     reviews_count = serializers.SerializerMethodField()
+    user_paid_review = serializers.SerializerMethodField()
+    user_retry_review = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -17,7 +21,28 @@ class ProductSerializer(serializers.ModelSerializer):
             "description",
             "average_rating",
             "reviews_count",
+            "user_paid_review",
+            "user_retry_review"
         )
+
+    def get_user_paid_review(self, obj):
+        request = self.context.get("request")
+        print(request.user)
+        if not request:
+            return False
+
+        user = request.user
+
+        return user_paid_review(user, obj)
+
+    def get_user_retry_review(self, obj):
+        request = self.context.get("request")
+        if not request:
+            return False
+
+        user = request.user
+
+        return user_retry_review(user, obj)
 
     def get_average_rating(self, obj):
         avg = obj.reviews.aggregate(avg=Avg("rating"))["avg"]
@@ -118,6 +143,24 @@ class ReviewSerializer(serializers.ModelSerializer):
             "user_name",
             "user_id",
         )
+
+    def validate(self, data):
+        request = self.context["request"]
+        product = self.context["product"]
+        user = request.user
+
+        if not user_paid_review(user, product):
+            raise serializers.ValidationError(
+                "Вы можете оставить отзыв только после покупки товара"
+            )
+
+        # защита от повторных отзывов
+        if user_retry_review(user, product):
+            raise serializers.ValidationError(
+                "Вы уже оставили отзыв на этот товар"
+            )
+
+        return data
 
 
 class TopProductSerializer(serializers.ModelSerializer):

@@ -229,7 +229,6 @@ class ProductDetailAPIView(APIView):
 
     def get(self, request, slug):
         product = get_object_or_404(Product, slug=slug)
-        print(product.image)
         return Response(
             ProductSerializer(product, context={'request': request}).data
         )
@@ -238,12 +237,20 @@ class ProductReviewAPIView(ListCreateAPIView):
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    def get_product(self):
+        return Product.objects.get(slug=self.kwargs["slug"])
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["product"] = self.get_product()
+        return context
+
     def get_queryset(self):
-        product = Product.objects.get(slug=self.kwargs["slug"])
+        product = self.get_product()
         return Review.objects.filter(product=product)
 
     def perform_create(self, serializer):
-        product = Product.objects.get(slug=self.kwargs["slug"])
+        product = self.get_product()
         serializer.save(
             product=product,
             user=self.request.user
