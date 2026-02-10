@@ -27,7 +27,6 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_user_paid_review(self, obj):
         request = self.context.get("request")
-        print(request.user)
         if not request:
             return False
 

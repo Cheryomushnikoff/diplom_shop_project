@@ -62,15 +62,21 @@ def order_email_notifications(sender, instance, created, **kwargs):
         user_email.content_subtype = "html"
         user_email.send(fail_silently=False)
 
-        if instance.status == 'new':
+        if instance.status in ['new','paid']:
+            text_status = 'Новый'
+            for status in instance.STATUS_CHOICES:
+                if status[0] == instance.status:
+                    text_status = status[1]
+                    break
             admin_html = render_to_string(
-                "store/email/admin_new_order.html",
+                f"store/email/admin_order.html",
                 {
                     "order": instance,
                     "order_items": order_items,
+                    "text_status": text_status,
                 }
             )
-            print('дошли')
+
             admin_email = EmailMessage(
                 subject=f"🛒 Новый заказ #{instance.id}",
                 body=admin_html,

@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'users',
     "store.apps.StoreConfig",
+    "payments",
 
 ]
 
@@ -240,4 +241,16 @@ ADMINS = [
 DEFAULT_FROM_EMAIL = "cheremushnikoff@yandex.ru"
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://127.0.0.1:5173")
+
+YOOKASSA_SHOP_ID = "1271978"
+YOOKASSA_SECRET_KEY = "test_VrE7HJSZ7ubHv6Cbyw0X9ZM4C6S4-qevsSxPCXbEX10"
+YOOKASSA_SANDBOX = True
+
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    ".ngrok-free.dev",
+]
+
+
 

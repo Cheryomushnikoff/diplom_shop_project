@@ -197,7 +197,11 @@ class OrderCreateView(APIView):
         if user:
             CartItem.objects.filter(cart=cart).delete()
 
-        return Response({"order_id": order.id})
+        return Response({
+                          "id": order.id,
+                          "status": order.status,
+                          "total_price": order.total_price
+                        })
 
 class MyOrdersAPIView(APIView):
     permission_classes = [IsAuthenticated]

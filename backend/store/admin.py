@@ -1,8 +1,9 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.utils.html import format_html
 from rest_framework.exceptions import ValidationError
 
 from .admin_site import admin_site
+from .forms import OrderAdminForm
 from .models import Category, Product, Order, OrderItem, Review
 from .services.order_status import can_change_status
 
@@ -20,8 +21,6 @@ class ProductAdmin(admin.ModelAdmin):
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("name", "slug")
-
-
 
 admin_site.register(Category, CategoryAdmin)
 admin_site.register(Product, ProductAdmin)
@@ -53,6 +52,7 @@ class OrderItemInline(admin.TabularInline):
 @admin.register(Order, site=admin_site)
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
+    form = OrderAdminForm
 
     list_display = (
         "order_id",
@@ -73,7 +73,7 @@ class OrderAdmin(admin.ModelAdmin):
     items_count.short_description = "Товаров"
 
     def order_id(self, obj):
-        if obj.status == "new":
+        if obj.status in ["new", "paid"]:
             return format_html("<strong>#{} 🔔</strong>", obj.id)
         return f"#{obj.id}"
 
@@ -102,16 +102,6 @@ class OrderAdmin(admin.ModelAdmin):
 
     colored_status.short_description = "Статус"
 
-    def save_model(self, request, obj, form, change):
-        if change:
-            old = Order.objects.get(pk=obj.pk)
-
-            if not can_change_status(old.status, obj.status):
-                raise ValidationError(
-                    f"Нельзя изменить статус с '{old.status}' на '{obj.status}'"
-                )
-
-        super().save_model(request, obj, form, change)
 
     def has_module_permission(self, request):
         return request.user.is_staff

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useMainContext } from "../pages/MainContext.jsx";
+import {useEffect, useState} from "react";
+import {useMainContext} from "../pages/MainContext.jsx";
 import ApiClient from "./helpers/apiClient.js";
 
 export default function CheckoutPage() {
@@ -10,6 +10,9 @@ export default function CheckoutPage() {
         authTokens,
         logoutUser
     } = useMainContext();
+
+    const [orderId, setOrderId] = useState(null);
+    const [paymentLoading, setPaymentLoading] = useState(false);
 
     const [form, setForm] = useState({
         first_name: "",
@@ -97,9 +100,13 @@ export default function CheckoutPage() {
         };
 
         try {
-            await ApiClient.post("/orders/create/", JSON.stringify(payload));
+            const res = await ApiClient.post(
+                "/orders/create/",
+                JSON.stringify(payload)
+            );
+
             setCartItems([]);
-            setSuccess(true);
+            setOrderId(res.data.id);
         } catch {
             setErrors({
                 global: "Не удалось оформить заказ. Попробуйте позже.",
@@ -109,18 +116,49 @@ export default function CheckoutPage() {
         }
     };
 
+
     /* ---------- success ---------- */
 
-    if (success) {
+    if (orderId) {
         return (
             <div className="container py-5 text-center">
-                <h3>Спасибо за заказ 🎉</h3>
+                <h3>Заказ №{orderId} создан ✅</h3>
+
                 <p className="text-muted mt-2">
-                    Мы свяжемся с вами в ближайшее время
+                    Остался последний шаг — оплата
                 </p>
+
+                <button
+                    className="btn btn-success mt-4 px-4"
+                    disabled={paymentLoading}
+                    onClick={async () => {
+                        setPaymentLoading(true);
+                        try {
+                            const res = await ApiClient.post(
+                                `/payments/yookassa/create/${orderId}/`
+                            );
+                            console.log(res.data.payment_url)
+                            window.location.href = res.data.payment_url;
+                        } catch {
+                            alert("Ошибка перехода к оплате");
+                        } finally {
+                            setPaymentLoading(false);
+                        }
+                    }}
+                >
+                    {paymentLoading ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2"/>
+                            Переход к оплате…
+                        </>
+                    ) : (
+                        "Оплатить заказ"
+                    )}
+                </button>
             </div>
         );
     }
+
 
     /* ---------- render ---------- */
 
@@ -220,7 +258,7 @@ export default function CheckoutPage() {
                             </div>
                         ))}
 
-                        <hr />
+                        <hr/>
 
                         <div className="d-flex justify-content-between fw-bold mb-3">
                             <span>Итого:</span>
@@ -239,15 +277,15 @@ export default function CheckoutPage() {
                             disabled={loading || cartItems.length === 0}
                         >
                             {loading ? (
-                            <>
+                                <>
                                 <span
                                     className="spinner-border spinner-border-sm me-2"
                                     role="status"
                                     aria-hidden="true"
                                 />
-                                Оформляем…
-                            </>
-                        )  : "Оформить заказ"}
+                                    Оформляем…
+                                </>
+                            ) : "Оформить заказ"}
                         </button>
                     </div>
                 </div>
