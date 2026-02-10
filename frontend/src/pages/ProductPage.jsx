@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import axios from "axios";
 import {useMainContext} from "./MainContext";
 import ReviewForm from "./ReviewForm";
@@ -39,11 +39,20 @@ export default function ProductPage() {
     const fetchProduct = async () => {
         try {
             setLoading(true);
+            const tokens = JSON.parse(localStorage.getItem("authTokens"));
 
-            const productRes = await axios.get(
-                `/api/products/${slug}/`
-            );
+            const productRes = tokens ? await axios.get(
+                `/api/products/${slug}/`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${tokens.access}`,
+                    },
+                }
+            ) : await axios.get(
+                `/api/products/${slug}/`);
+
             setProduct(productRes.data);
+            console.log(productRes.data)
 
             const reviewsRes = await axios.get(
                 `/api/products/${slug}/reviews/`
@@ -70,7 +79,10 @@ export default function ProductPage() {
 
     /* ⭐ пользователь уже писал отзыв */
     const alreadyReviewed =
-        user && reviews.some((r) => r.user_id === user.id);
+        product.user_retry_review
+    const paidRewiew =
+        product.user_paid_review
+
 
     return (
         <div className="container mt-4">
@@ -174,7 +186,7 @@ export default function ProductPage() {
                         ))}
 
                         {/*  ФОРМА ОТЗЫВА */}
-                        {token && !alreadyReviewed && (
+                        {token && !alreadyReviewed && paidRewiew && (
                             <div className="mt-4">
                                 <h6>Оставить отзыв</h6>
                                 <ReviewForm
@@ -182,6 +194,18 @@ export default function ProductPage() {
                                     token={token}
                                     onSuccess={fetchProduct}
                                 />
+                            </div>
+                        )}
+                        
+                        {!token && (
+                            <div className="alert alert-secondary mt-3">
+                               Отзыв могут оставить только <Link to='/register'>зарегистрированные</Link> пользователи
+                            </div>
+                        )}
+
+                        {token && !paidRewiew && (
+                            <div className="alert alert-secondary mt-3">
+                               Отзыв можно оставить только для приобретенного товара
                             </div>
                         )}
 
