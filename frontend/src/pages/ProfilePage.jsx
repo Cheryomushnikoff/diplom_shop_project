@@ -2,9 +2,20 @@ import {useState, useEffect} from "react";
 import OrdersTab from "./orders/OrdersTab.jsx";
 import ApiClient from "./helpers/apiClient.js";
 import {useMainContext} from "./MainContext.jsx";
+import {useSearchParams} from "react-router-dom";
 
 export default function ProfilePage() {
-    const [activeTab, setActiveTab] = useState("profile"); // profile / orders / password
+    const [searchParams] = useSearchParams()
+    const [activeTab, setActiveTab] = useState(
+    searchParams.get("tab") || "profile"
+    );
+
+    useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab) {
+        setActiveTab(tab);
+    }}, [searchParams]);
+
     const [formData, setFormData] = useState({
         email: "",
         phone: "",

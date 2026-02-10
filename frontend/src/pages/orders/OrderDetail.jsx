@@ -4,7 +4,8 @@ import ApiClient from "../helpers/apiClient.js";
 
 export default function OrderDetail({orderId}) {
     const [order, setOrder] = useState(null);
-    const {authTokens, logoutUser} = useMainContext()
+    const [paymentLoading, setPaymentLoading] = useState(false);
+    const {logoutUser} = useMainContext()
 
     useEffect(() => {
         ApiClient.get(`/orders/${orderId}/`)
@@ -48,6 +49,33 @@ export default function OrderDetail({orderId}) {
                 <hr/>
                 <strong>Адрес доставки:</strong>
                 <p>{order.address}</p>
+                {order.status_display === 'Новый' && <button
+                    className="btn btn-success mt-4 px-4"
+                    disabled={paymentLoading}
+                    onClick={async () => {
+                        setPaymentLoading(true);
+                        try {
+                            const res = await ApiClient.post(
+                                `/payments/yookassa/create/${orderId}/`
+                            );
+                            console.log(res.data.payment_url)
+                            window.location.href = res.data.payment_url;
+                        } catch {
+                            alert("Ошибка перехода к оплате");
+                        } finally {
+                            setPaymentLoading(false);
+                        }
+                    }}
+                >
+                    {paymentLoading ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2"/>
+                            Переход к оплате…
+                        </>
+                    ) : (
+                        "Оплатить заказ"
+                    )}
+                </button>}
             </div>
         </div>
     );

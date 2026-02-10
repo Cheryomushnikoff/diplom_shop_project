@@ -9,6 +9,8 @@ import CheckoutPage from "./pages/CheckoutPage.jsx";
 import Home from "./pages/Home.jsx";
 import ProductPage from "./pages/ProductPage.jsx";
 import VerifyPage from "./pages/VerifyPage.jsx";
+import PaymentFailPage from "./pages/PaymentFailPage.jsx";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage.jsx";
 
 
 export default function App() {
@@ -24,6 +26,8 @@ export default function App() {
                     <Route path="/profile" element={<ProfilePage/>}/>
                     <Route path="/checkout" element={<CheckoutPage/>} />
                     <Route path="/email-verified" element={<VerifyPage/>} />
+                    <Route path="/payment-success" element={<PaymentSuccessPage />} />
+                    <Route path="/payment-fail" element={<PaymentFailPage />} />
                     <Route path="/" element={<Home/>} />
                 </Routes>
             </Layout>
