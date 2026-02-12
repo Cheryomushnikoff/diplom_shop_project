@@ -14,8 +14,7 @@ export default function HeaderSearch() {
   const lastUrlRef = useRef(""); //  защита от зацикливания
 
     useEffect(() => {
-        console.log(!window.location.pathname.startsWith('/products'))
-        if (!window.location.pathname.startsWith('/products') && query.trim()) {
+        if (!window.location.pathname.startsWith('/products') && !query.trim() && !selectedCategories.length) {
             return;
         }
 

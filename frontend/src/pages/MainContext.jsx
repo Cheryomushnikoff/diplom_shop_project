@@ -179,7 +179,7 @@ const toggleCategory = (slug) => {
                 logoutUser,
                 totalPrice,
                 setCartItems,
-                selectedCategories,  // массив выбранных категорий
+                selectedCategories,
                 toggleCategory,
                 query,
                 setQuery
