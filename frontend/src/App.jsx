@@ -12,6 +12,7 @@ import VerifyPage from "./pages/VerifyPage.jsx";
 import PaymentFailPage from "./pages/PaymentFailPage.jsx";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage.jsx";
 import CancelledPage from "./pages/CancelledPage.jsx";
+import DeliveryPage from "./pages/DeliveryPage.jsx";
 
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
                     <Route path="/payment-success" element={<PaymentSuccessPage />} />
                     <Route path="/payment-fail" element={<PaymentFailPage />} />
                     <Route path="/cancelled" element={<CancelledPage/>} />
+                    <Route path="/delivery" element={<DeliveryPage />} />
                     <Route path="/" element={<Home/>} />
                 </Routes>
             </Layout>

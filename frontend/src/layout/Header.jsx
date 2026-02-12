@@ -29,7 +29,6 @@ export default function Header() {
                     </Link>
                 </li>
 
-                {/* Каталог */}
                 <li className="nav-item">
                     <Link className="nav-link custom-link" to="/products">
                         Каталог
@@ -37,6 +36,12 @@ export default function Header() {
                 </li>
 
                 <CategoryHeader/>
+
+                <li className="nav-item">
+                    <Link className="nav-link active custom-link" to="/delivery">
+                        Доставка и оплата
+                    </Link><
+                /li>
 
                 <HeaderSearch/>
 
