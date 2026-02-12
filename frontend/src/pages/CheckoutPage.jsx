@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {useMainContext} from "../pages/MainContext.jsx";
 import ApiClient from "./helpers/apiClient.js";
+import {useNavigate} from "react-router-dom";
 
 export default function CheckoutPage() {
     const {
@@ -10,9 +11,11 @@ export default function CheckoutPage() {
         authTokens,
         logoutUser
     } = useMainContext();
-
+    const navigate = useNavigate()
     const [orderId, setOrderId] = useState(null);
     const [paymentLoading, setPaymentLoading] = useState(false);
+
+
 
     const [form, setForm] = useState({
         first_name: "",
@@ -26,6 +29,9 @@ export default function CheckoutPage() {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [loadingCancel, setLoadingCancel] = useState(false);
+
+
 
     /* ---------- загрузка профиля ---------- */
 
@@ -81,6 +87,26 @@ export default function CheckoutPage() {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
+    const cancelOrder = async () => {
+        if (!window.confirm("Вы уверены, что хотите отменить заказ?")) return;
+
+        setLoadingCancel(true);
+        setErrors("");
+
+        try {
+            await ApiClient.post(`/orders/${orderId}/cancel/`);
+            navigate('/cancelled')
+
+        } catch (err) {
+            setErrors({
+                global: err.response?.data?.detail ||
+                "Не удалось отменить заказ",
+            });
+
+        } finally {
+            setLoadingCancel(false);
+        }
+    };
 
     /* ---------- submit ---------- */
 
@@ -129,7 +155,7 @@ export default function CheckoutPage() {
                 </p>
 
                 <button
-                    className="btn btn-success mt-4 px-4"
+                    className="btn btn-success m-2 px-4"
                     disabled={paymentLoading}
                     onClick={async () => {
                         setPaymentLoading(true);
@@ -154,6 +180,13 @@ export default function CheckoutPage() {
                     ) : (
                         "Оплатить заказ"
                     )}
+                </button>
+                <button
+                    className="btn btn-outline-danger m-2 px-4"
+                    onClick={cancelOrder}
+                    disabled={loadingCancel}
+                >
+                    {loadingCancel ? "Отмена…" : "Отменить заказ"}
                 </button>
             </div>
         );

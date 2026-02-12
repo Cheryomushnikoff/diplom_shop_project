@@ -77,7 +77,7 @@ export default function OrderDetail({orderId, onUpdate }) {
                 <strong>Адрес доставки:</strong>
                 <p>{order.address}</p>
                 {order.status_display === 'Новый' && <button
-                    className="btn btn-success mt-4 px-4"
+                    className="btn btn-success m-2 px-4"
                     disabled={paymentLoading}
                     onClick={async () => {
                         setPaymentLoading(true);
@@ -105,7 +105,7 @@ export default function OrderDetail({orderId, onUpdate }) {
                 </button>}
                 {canCancel && (
                 <button
-                    className="btn btn-outline-danger mt-4 px-4 ml-2"
+                    className="btn btn-outline-danger m-2 px-4"
                     onClick={cancelOrder}
                     disabled={loading}
                 >

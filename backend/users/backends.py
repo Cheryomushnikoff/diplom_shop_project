@@ -7,7 +7,7 @@ User = get_user_model()
 class EmailOrPhoneBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         """
-        :param username: то, что пользователь вводит (email или phone)
+        username: то, что пользователь вводит (email или phone)
         """
         if username is None:
             username = kwargs.get(User.USERNAME_FIELD)

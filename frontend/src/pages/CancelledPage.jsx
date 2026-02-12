@@ -2,22 +2,19 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {useMainContext} from "./MainContext.jsx";
 
-export default function PaymentSuccessPage() {
+export default function CancelledPage() {
     const navigate = useNavigate();
     const { authTokens } = useMainContext()
 
     useEffect(() => {
-        // можно очистить корзину
         localStorage.removeItem("guestCart");
     }, []);
-
     return (
         <div className="container py-5 text-center">
-            <h2 className="text-success mb-3">Оплата прошла успешно 🎉</h2>
+            <h2 className="text-danger mb-3">Заказ отменен ❌</h2>
 
             <p className="text-muted">
-                Мы получили ваш платёж.
-                Скоро приступим к обработке заказа.
+               Заказ отменен, деньги не спишутся
             </p>
 
             <div className="mt-4 d-flex justify-content-center gap-3">

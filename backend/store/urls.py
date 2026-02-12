@@ -12,8 +12,6 @@ from .api_views import (
     CancelOrderAPIView
 )
 
-from .views import main_page_view, product_card_view, product_list_page, cart_page
-
 
 app_name = 'store'
 

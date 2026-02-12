@@ -11,12 +11,12 @@ export default function HeaderSearch() {
 
   const navigate = useNavigate();
   const debounceRef = useRef(null);
-  const lastUrlRef = useRef(""); // 🔒 защита от зацикливания
-  const isMobile = window.innerWidth < 750;
+  const lastUrlRef = useRef(""); //  защита от зацикливания
 
     useEffect(() => {
-        if (!query.trim() && selectedCategories.length === 0) {
-            return; // ⛔ ничего не делаем
+        console.log(!window.location.pathname.startsWith('/products'))
+        if (!window.location.pathname.startsWith('/products') && query.trim()) {
+            return;
         }
 
         if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -45,10 +45,6 @@ export default function HeaderSearch() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (isMobile && !isOpen) {
-      setIsOpen(true);
-      return;
-    }
 
     if (!query.trim() && selectedCategories.length === 0) {
       setIsError(true);
@@ -62,7 +58,7 @@ export default function HeaderSearch() {
     <form className="header-search" onSubmit={handleSubmit}>
       <div
         className={`search-container ${
-          isOpen || !isMobile ? "visible" : ""
+          isOpen ? "visible" : ""
         }`}
       >
         <input
@@ -78,7 +74,7 @@ export default function HeaderSearch() {
             setQuery(e.target.value);
             setIsError(false);
           }}
-          autoFocus={isMobile && isOpen}
+          autoFocus={isOpen}
         />
       </div>
 

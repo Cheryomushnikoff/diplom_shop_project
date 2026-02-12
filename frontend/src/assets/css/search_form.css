@@ -42,37 +42,52 @@
     color:black
 }
 
-/* ================================================= */
+
 /* 📱 MOBILE < 750px                                 */
-/* ================================================= */
-@media (max-width: 749px) {
-    .search-container {
-        position: absolute;
-        right: 40px; /* ширина кнопки */
-        width: 0;
-        opacity: 0;
-        overflow: hidden;
-        pointer-events: none;
 
-        transition: width 0.3s ease, opacity 0.2s ease;
-    }
+/*@media (max-width: 749px) {*/
+/*    .search-container {*/
+/*        position: absolute;*/
+/*        right: 40px; !* ширина кнопки *!*/
+/*        width: 0;*/
+/*        opacity: 0;*/
+/*        overflow: hidden;*/
+/*        pointer-events: none;*/
 
-    .search-container.visible {
-        width: 180px;
-        opacity: 1;
-        pointer-events: auto;
-    }
+/*        transition: width 0.3s ease, opacity 0.2s ease;*/
+/*    }*/
+
+/*    .search-container.visible {*/
+/*        width: 180px;*/
+/*        opacity: 1;*/
+/*        pointer-events: auto;*/
+/*    }*/
+/*}*/
+
+
+/*!* 🖥 DESKTOP ≥ 750px                                *!*/
+
+/*@media (min-width: 750px) {*/
+/*    .search-container {*/
+/*        position: static;*/
+/*        width: 200px;*/
+/*        opacity: 1;*/
+/*        pointer-events: auto;*/
+/*        transition: none;*/
+/*    }*/
+/*}*/
+
+.search-container {
+    position: absolute;
+    right: 40px; /* ширина кнопки */
+    width: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transition: width 0.3s ease, opacity 0.2s ease;
 }
-
-/* ================================================= */
-/* 🖥 DESKTOP ≥ 750px                                */
-/* ================================================= */
-@media (min-width: 750px) {
-    .search-container {
-        position: static;
-        width: 200px;
-        opacity: 1;
-        pointer-events: auto;
-        transition: none;
-    }
+.search-container.visible {
+    width: 200px;
+    opacity: 1;
+    pointer-events: auto;
 }

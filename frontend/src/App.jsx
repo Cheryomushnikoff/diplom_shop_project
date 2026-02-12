@@ -11,6 +11,7 @@ import ProductPage from "./pages/ProductPage.jsx";
 import VerifyPage from "./pages/VerifyPage.jsx";
 import PaymentFailPage from "./pages/PaymentFailPage.jsx";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage.jsx";
+import CancelledPage from "./pages/CancelledPage.jsx";
 
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
                     <Route path="/email-verified" element={<VerifyPage/>} />
                     <Route path="/payment-success" element={<PaymentSuccessPage />} />
                     <Route path="/payment-fail" element={<PaymentFailPage />} />
+                    <Route path="/cancelled" element={<CancelledPage/>} />
                     <Route path="/" element={<Home/>} />
                 </Routes>
             </Layout>
