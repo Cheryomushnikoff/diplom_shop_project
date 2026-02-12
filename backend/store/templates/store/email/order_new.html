@@ -2,8 +2,6 @@
 {% block title %}Заказ #{{ order.id }} оформлен{% endblock %}
 {% block content %}
 <h2>Спасибо за заказ!</h2>
-<p>Номер заказа: <strong>{{ order.id }}</strong></p>
-<p>Статус: <strong>{{ order.get_status_display }}</strong></p>
 <p>Контакты: {{ order.first_name }} {{ order.last_name }}, {{ order.email }}, {{ order.phone }}</p>
 <p>Адрес: {{ order.address }}</p>
 

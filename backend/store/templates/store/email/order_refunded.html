@@ -1,7 +1,7 @@
 {% extends "store/email/base_email.html" %}
-{% block title %}Заказ #{{ order.id }} отправлен{% endblock %}
+{% block title %}Заказ #{{ order.id }} отменён{% endblock %}
 {% block content %}
-<h2>Ваш заказ отправлен</h2>
+<h2>Ваш заказ отменён, деньги будут возвращены</h2>
 
 {% include "store/email/order_items_table.html" with items=order_items total_price=order.total_price %}
 {% endblock %}
