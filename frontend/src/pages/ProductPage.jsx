@@ -52,7 +52,6 @@ export default function ProductPage() {
                 `/api/products/${slug}/`);
 
             setProduct(productRes.data);
-            console.log(productRes.data)
 
             const reviewsRes = await axios.get(
                 `/api/products/${slug}/reviews/`

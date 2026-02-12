@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {useMainContext} from "../pages/MainContext.jsx";
 
 export default function AuthHeader() {
-    const {user, setUser, logoutUser} = useMainContext();
+    const {user, logoutUser} = useMainContext();
     const [hideAuth, setHideAuth] = useState(window.innerWidth < 850);
     const navigate = useNavigate();
 
@@ -16,10 +16,7 @@ export default function AuthHeader() {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    // Получаем текущего пользователя, если есть токен
 
-
-    // Логаут
     const handleLogout = () => {
         logoutUser();
         navigate('/')

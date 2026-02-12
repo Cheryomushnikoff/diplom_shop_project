@@ -1,7 +1,7 @@
 ALLOWED_TRANSITIONS = {
-    "new": ["paid", "canceled"],
-    "paid": ["processing", "canceled", "refunded"],
-    "processing": ["shipped", "refunded"],
+    "new": ["canceled"],
+    "paid": ["processing"],
+    "processing": ["shipped",],
     "shipped": ["completed"],
     "completed": [],
     "canceled": [],
