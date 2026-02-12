@@ -20,7 +20,7 @@ class ShopAdminSite(AdminSite):
                 # Ссылка с фильтром по новым заказам
                 url = reverse("admin:store_order_changelist") + "?status__exact=new"
                 notif_text = mark_safe(
-                    f'🔔 <a href="{url}">У вас {new_orders_count} новых заказ(а)</a>'
+                    f'🔔 <a style="color:white" href="{url}">У вас {new_orders_count} новых заказ(а)</a>'
                 )
 
                 existing_messages = [
@@ -32,7 +32,7 @@ class ShopAdminSite(AdminSite):
             if paid_orders_count > 0:
                 url = reverse("admin:store_order_changelist") + "?status__exact=paid"
                 notif_text = mark_safe(
-                    f'🔔 <a href="{url}">У вас {paid_orders_count} оплаченных заказ(а)</a>'
+                    f'🔔 <a style="color:white" href="{url}">У вас {paid_orders_count} оплаченных заказ(а)</a>'
                 )
 
                 existing_messages = [

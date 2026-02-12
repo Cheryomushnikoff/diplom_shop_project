@@ -1,9 +1,12 @@
+from django.shortcuts import get_object_or_404
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from store.models import Order
 from .models import Payment
-from .services.yookassa_s import create_yookassa_payment
+from .services import create_yookassa_payment, create_refund
+
 
 class CreateYooKassaPaymentView(APIView):
     permission_classes = [AllowAny]
@@ -26,3 +29,23 @@ class CreateYooKassaPaymentView(APIView):
         payment.save()
 
         return Response({"payment_url": yk_payment.confirmation.confirmation_url})
+
+
+class UserRefundAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, order_id):
+        payment = get_object_or_404(
+            Payment,
+            order_id=order_id,
+        )
+
+        if payment.status != "paid":
+            return Response(
+                {"detail": "Платёж не подтверждён"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        create_refund(payment)
+
+        return Response({"detail": "Запрос на возврат отправлен"})

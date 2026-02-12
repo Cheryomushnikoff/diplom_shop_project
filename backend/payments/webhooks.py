@@ -22,4 +22,18 @@ def yookassa_webhook(request):
 
         mark_order_paid(payment.order)  # помечаем заказ как оплаченный
 
+    elif event.get("event") == "refund.succeeded":
+        payment_id = event["object"]["payment_id"]
+
+
+        payment = Payment.objects.get(payment_id=payment_id)
+        order = payment.order
+
+        payment.status = "refunded"
+        payment.save()
+
+        order.status = "refunded"
+        order.save()
+
     return HttpResponse(status=200)
+

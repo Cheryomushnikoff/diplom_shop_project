@@ -1,15 +1,43 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import {useEffect, useState} from "react";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import {useMainContext} from "./MainContext.jsx";
+import ApiClient from "./helpers/apiClient.js";
 
 export default function PaymentSuccessPage() {
     const navigate = useNavigate();
-    const { authTokens } = useMainContext()
+    const { authTokens } = useMainContext();
+    const [searchParams] = useSearchParams();
+    const orderId = searchParams.get("order");
+
+    const [errors, setErrors] = useState({});
+    const [loadingCancel, setLoadingCancel] = useState(false);
 
     useEffect(() => {
         // можно очистить корзину
         localStorage.removeItem("guestCart");
     }, []);
+
+    const cancelOrder = async () => {
+        if (!window.confirm("Вы уверены, что хотите отменить заказ и вернуть деньги?")) return;
+
+        setLoadingCancel(true);
+        setErrors("");
+
+        try {
+            await ApiClient.post(`/payments/user-refund/${orderId}/`);
+            navigate('/cancelled')
+
+        } catch (err) {
+            setErrors({
+                global: err.response?.data?.detail ||
+                "Не удалось отменить заказ",
+            });
+
+        } finally {
+            setLoadingCancel(false);
+            navigate('/refunded')
+        }
+    };
 
     return (
         <div className="container py-5 text-center">
@@ -21,6 +49,18 @@ export default function PaymentSuccessPage() {
             </p>
 
             <div className="mt-4 d-flex justify-content-center gap-3">
+
+                <button
+                    className="btn btn-outline-danger "
+                    onClick={cancelOrder}
+                    disabled={loadingCancel}
+                >
+                    {loadingCancel ? <>
+                            <span className="spinner-border spinner-border-sm me-2"/>
+                            Возврат…
+                        </> : "Отмена и возврат"}
+                </button>
+
                 {authTokens?.access && <button
                     className="btn btn-secondary"
                     onClick={() => navigate("/profile?tab=orders")}

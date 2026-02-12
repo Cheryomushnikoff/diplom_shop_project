@@ -38,6 +38,7 @@ def order_email_notifications(sender, instance, created, **kwargs):
             "shipped": "store/email/order_shipped.html",
             "completed": "store/email/order_completed.html",
             "canceled": "store/email/order_canceled.html",
+            "refunded": "store/email/order_refunded.html",
         }
 
         user_template = user_templates.get(

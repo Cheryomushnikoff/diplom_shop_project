@@ -8,7 +8,11 @@ from .api_views import (
     ListCategoryAPIView,
     CartMergeView,
     OrderCreateView,
-    MyOrdersAPIView, MyOrderDetailAPIView, ProductDetailAPIView, ProductReviewAPIView, TopProductsAPIView,
+    MyOrdersAPIView,
+    MyOrderDetailAPIView,
+    ProductDetailAPIView,
+    ProductReviewAPIView,
+    TopProductsAPIView,
     CancelOrderAPIView
 )
 
@@ -27,6 +31,7 @@ urlpatterns = [
     path('orders/<int:order_id>/', MyOrderDetailAPIView.as_view()),
     path('orders/create/', OrderCreateView.as_view()),
     path("orders/<int:pk>/cancel/", CancelOrderAPIView.as_view()),
+    # path("orders/<int:pk>/cancel/", Refunded.as_view()),
     path('cart/', CartViewSet.as_view()),
     path("cart/merge/", CartMergeView.as_view()),
     path("cart/sync/", CartSyncView.as_view(), name="cart-sync"),

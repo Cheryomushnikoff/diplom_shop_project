@@ -85,6 +85,7 @@ class CartItem(models.Model):
 class Order(models.Model):
     STATUS_NEW = "new"
     STATUS_PAID = "paid"
+    STATUS_REFUNDED = "refunded"
     STATUS_PROCESSING = "processing"
     STATUS_SHIPPED = "shipped"
     STATUS_COMPLETED = "completed"
@@ -93,6 +94,7 @@ class Order(models.Model):
     STATUS_CHOICES = [
         (STATUS_NEW, "Новый"),
         (STATUS_PAID, "Оплачен"),
+        (STATUS_REFUNDED, "Отменён и деньги возвращёны"),
         (STATUS_PROCESSING, "В обработке"),
         (STATUS_SHIPPED, "Отправлен"),
         (STATUS_COMPLETED, "Завершён"),

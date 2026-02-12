@@ -28,7 +28,6 @@ export default function CheckoutPage() {
     const [user, setUser] = useState(null);
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
     const [loadingCancel, setLoadingCancel] = useState(false);
 
 
@@ -186,7 +185,10 @@ export default function CheckoutPage() {
                     onClick={cancelOrder}
                     disabled={loadingCancel}
                 >
-                    {loadingCancel ? "Отмена…" : "Отменить заказ"}
+                    {loadingCancel ? <>
+                            <span className="spinner-border spinner-border-sm me-2"/>
+                            Отмена…
+                        </> : "Отменить заказ"}
                 </button>
             </div>
         );

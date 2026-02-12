@@ -1,4 +1,6 @@
 from django.contrib import admin, messages
+from django.shortcuts import redirect
+from django.urls import path, reverse
 from django.utils.html import format_html
 from rest_framework.exceptions import ValidationError
 
@@ -32,7 +34,7 @@ class OrderItemInline(admin.TabularInline):
     readonly_fields = ("product", "price", "quantity", "get_total")
 
     def get_total(self, obj):
-        return obj.price * obj.quantity
+        return (obj.price or 0) * (obj.quantity or 0)
 
     get_total.short_description = "Сумма"
 
@@ -65,7 +67,24 @@ class OrderAdmin(admin.ModelAdmin):
 
     list_filter = ("status", "created_at")
     search_fields = ("id", "email", "phone")
+    readonly_fields = ("refund_button",)
     ordering = ("-created_at",)
+
+    def refund_button(self, obj):
+        if obj.status != "paid":
+            return "Возврат недоступен"
+
+        url = reverse("admin:order-refund", args=[obj.id])
+
+        return format_html(
+            ''
+            '<a class="button" href="{}">'
+            '<button class="btn btn-danger" type="button">Сделать возврат</button>'
+            '</a>',
+            url
+        )
+
+    refund_button.short_description = "Возврат"
 
     def items_count(self, obj):
         return obj.items.count()
@@ -102,6 +121,40 @@ class OrderAdmin(admin.ModelAdmin):
 
     colored_status.short_description = "Статус"
 
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                "<int:order_id>/refund/",
+                self.admin_site.admin_view(self.process_refund),
+                name="order-refund",
+            ),
+        ]
+        return custom_urls + urls
+
+    def process_refund(self, request, order_id):
+        from payments.services import create_refund
+        from payments.models import Payment
+
+        payment = Payment.objects.get(order_id=order_id)
+
+        if payment.status != "paid":
+            self.message_user(
+                request,
+                "Платёж не оплачен",
+                level=messages.ERROR
+            )
+            return redirect(f"/admin/store/order/{order_id}/change/")
+
+        create_refund(payment)
+
+        self.message_user(
+            request,
+            "Запрос на возврат отправлен",
+            level=messages.SUCCESS
+        )
+
+        return redirect(f"/admin/store/order/{order_id}/change/")
 
     def has_module_permission(self, request):
         return request.user.is_staff

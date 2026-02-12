@@ -1,4 +1,4 @@
-from yookassa import Configuration, Payment
+from yookassa import Configuration, Payment, Refund
 from django.conf import settings
 import uuid
 
@@ -18,7 +18,7 @@ def create_yookassa_payment(order):
             },
             "confirmation": {
                 "type": "redirect",
-                "return_url": f"{settings.FRONTEND_URL}/payment-success",
+                "return_url": f"{settings.FRONTEND_URL}/payment-success?order={order.id}",
             },
             "capture": True,
             "description": f"Заказ №{order.id}",
@@ -29,3 +29,14 @@ def create_yookassa_payment(order):
         str(uuid.uuid4())
     )
     return payment
+
+def create_refund(payment):
+    refund = Refund.create({
+        "payment_id": payment.payment_id,
+        "amount": {
+            "value": str(payment.amount),
+            "currency": "RUB"
+        }
+    }, uuid.uuid4())
+
+    return refund

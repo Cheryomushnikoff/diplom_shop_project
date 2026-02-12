@@ -2,11 +2,12 @@ import {useEffect, useState} from "react";
 import {useMainContext} from "../MainContext.jsx";
 import ApiClient from "../helpers/apiClient.js";
 
-export default function OrderDetail({orderId, onUpdate }) {
+export default function OrderDetail({orderId, onUpdate}) {
     const [order, setOrder] = useState(null);
     const [paymentLoading, setPaymentLoading] = useState(false);
     const {logoutUser} = useMainContext()
-    const [loading, setLoading] = useState(false);
+    const [loadingCanceled, setLoadingCanceled] = useState(false);
+    const [loadingRefunded, setLoadingRefunded] = useState(false);
     const [error, setError] = useState("");
     const fetchOrder = async () => {
         ApiClient.get(`/orders/${orderId}/`)
@@ -21,14 +22,33 @@ export default function OrderDetail({orderId, onUpdate }) {
         fetchOrder()
     }, [orderId]);
 
+    const waitForStatusUpdate = async () => {
+        let attempts = 0;
+
+        const interval = setInterval(async () => {
+            attempts++;
+
+            const res = await ApiClient.get(`/orders/${orderId}/`);
+            setOrder(res.data);
+
+            if (res.data.status !== "paid" || attempts > 10) {
+                clearInterval(interval);
+                onUpdate?.();
+            }
+
+        }, 2000);
+    };
+
+
     if (!order) return null;
 
     const canCancel = ["new"].includes(order.status);
+    const canRefunded = ["paid"].includes(order.status);
 
     const cancelOrder = async () => {
         if (!window.confirm("Вы уверены, что хотите отменить заказ?")) return;
 
-        setLoading(true);
+        setLoadingCanceled(true);
         setError("");
 
         try {
@@ -40,8 +60,30 @@ export default function OrderDetail({orderId, onUpdate }) {
                 "Не удалось отменить заказ"
             );
         } finally {
-            setLoading(false);
+            setLoadingCanceled(false);
             fetchOrder()
+        }
+    };
+
+    const refundedOrder = async () => {
+        if (!window.confirm("Вы уверены, что хотите отменить заказ и вернуть деньги?")) return;
+
+        setLoadingRefunded(true);
+        setError("");
+
+        try {
+            await ApiClient.post(`/payments/user-refund/${orderId}/`);
+            await waitForStatusUpdate()
+
+        } catch (err) {
+            setError({
+                global: err.response?.data?.detail ||
+                    "Не удалось отменить заказ",
+            });
+
+        } finally {
+            setLoadingRefunded(false);
+            fetchOrder();
         }
     };
 
@@ -104,14 +146,29 @@ export default function OrderDetail({orderId, onUpdate }) {
                     )}
                 </button>}
                 {canCancel && (
-                <button
-                    className="btn btn-outline-danger m-2 px-4"
-                    onClick={cancelOrder}
-                    disabled={loading}
-                >
-                    {loading ? "Отмена…" : "Отменить заказ"}
-                </button>
-            )}
+                    <button
+                        className="btn btn-outline-danger m-2 px-4"
+                        onClick={cancelOrder}
+                        disabled={loadingCanceled}
+                    >
+                        {loadingCanceled ? <>
+                            <span className="spinner-border spinner-border-sm me-2"/>
+                            Отмена…
+                        </> : "Отменить заказ"}
+                    </button>
+                )}
+                {canRefunded && (
+                    <button
+                        className="btn btn-outline-danger m-2 px-4"
+                        onClick={refundedOrder}
+                        disabled={loadingRefunded}
+                    >
+                        {loadingRefunded ? <>
+                            <span className="spinner-border spinner-border-sm me-2"/>
+                            Возврат…
+                        </> : "Отменить заказ и вернуть деньги"}
+                    </button>
+                )}
             </div>
         </div>
     );
