@@ -1,6 +1,7 @@
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {useMainContext} from "../pages/MainContext.jsx";
+import HeaderSearch from "./HeaderSearch.jsx";
 
 export default function AuthHeader() {
     const {user, logoutUser} = useMainContext();
@@ -28,30 +29,48 @@ export default function AuthHeader() {
                 {hideAuth ? (
                     <li className="nav-item dropdown">
                         <a className="nav-link dropdown-toggle custom-link" data-bs-toggle="dropdown" href="#">
-                            <i className="bi bi-person-circle"></i>
+                            <i className="bi bi-three-dots"></i>
                         </a>
                         <ul className="dropdown-menu custom-dropdown-menu-auth-mobile">
-                            <li><span className="dropdown-item auth-item"><Link
-                                to='/profile'>{user.first_name || user.email}</Link></span></li>
+                            <li className="dropdown-item auth-item">
+                                <Link className="nav-link active custom-link" to="/delivery">
+                                    Доставка и оплата
+                                </Link>
+                            </li>
+                            <li>
+                                <span className="dropdown-item auth-item">
+                                    <i className="bi bi-person-circle"></i>
+                                    <Link to='/profile'>
+                                        {user.first_name || user.email}
+                                    </Link>
+                                </span>
+                            </li>
                             <li>
                                 <button className="dropdown-item auth-item" onClick={handleLogout}>Выход</button>
                             </li>
                         </ul>
                     </li>
                 ) : (
-                    <div id="authDesktop" className="d-flex">
+                    <div id="authDesktop" className="d-flex justify-content-between">
                         <li className="nav-item custom-nav-item">
-                  <span className="nav-link custom-link userSpan">
-                    <i className="bi bi-person-circle"></i>
-                      <Link to='/profile'>
-                          {user.first_name || (user.email.length > 15 ? user.email.slice(0, 4) + '...' : user.email)}
-                      </Link>
-                  </span>
+                            <Link className="nav-link active custom-link" to="/delivery">
+                                Доставка и оплата
+                            </Link>
                         </li>
-                        <li className="nav-item custom-nav-item">
-                            <button className="nav-link custom-link btn btn-link p-0" onClick={handleLogout}>Выход
-                            </button>
-                        </li>
+                        <div>
+                            <li className="nav-item custom-nav-item">
+                              <span className="nav-link custom-link userSpan">
+                                 <i className="bi bi-person-circle"></i>
+                                  <Link to='/profile'>
+                                      {user.first_name || (user.email.length > 15 ? user.email.slice(0, 4) + '...' : user.email)}
+                                  </Link>
+                              </span>
+                            </li>
+                            <li className="nav-item custom-nav-item">
+                                <button className="nav-link custom-link btn btn-link p-0" onClick={handleLogout}>Выход
+                                </button>
+                            </li>
+                        </div>
                     </div>
                 )}
             </>
@@ -63,19 +82,31 @@ export default function AuthHeader() {
                             <i className="bi bi-three-dots"></i>
                         </a>
                         <ul className="dropdown-menu custom-dropdown-menu-auth-mobile">
+                            <li className="">
+                                <Link className="dropdown-item auth-item" to="/delivery">
+                                    Доставка и оплата
+                                </Link>
+                            </li>
                             <li><Link className="dropdown-item auth-item" to="/login">Вход</Link></li>
                             <li><Link className="dropdown-item auth-item" to="/register">Регистрация</Link></li>
                         </ul>
                     </li>
                 ) : (
-                    <div id="authDesktop" className="d-flex">
+                    <div id="authDesktop" className="d-flex justify-content-between">
                         <li className="nav-item custom-nav-item">
-                            <Link className="nav-link custom-link" to="/login">Вход</Link>
+                            <Link className="nav-link custom-link" to="/delivery">
+                                Доставка и оплата
+                            </Link>
                         </li>
-                        /
-                        <li className="nav-item custom-nav-item">
-                            <Link className="nav-link custom-link" to="/register">Регистрация</Link>
-                        </li>
+                        <div>
+                            <li className="nav-item custom-nav-item">
+                                <Link className="nav-link custom-link" to="/login">Вход</Link>
+                            </li>
+                            /
+                            <li className="nav-item custom-nav-item">
+                                <Link className="nav-link custom-link" to="/register">Регистрация</Link>
+                            </li>
+                        </div>
                     </div>
                 )}
             </>

@@ -19,7 +19,7 @@ export default function Header() {
 
     return (
         <header>
-            <ul className="nav justify-content-center custom-nav mt-3 mb-5">
+            <ul className="nav justify-content-center custom-nav mt-3 mb-4">
 
                 {/* Логотип */}
                 <li className="nav-item">
@@ -36,12 +36,6 @@ export default function Header() {
                 </li>
 
                 <CategoryHeader/>
-
-                <li className="nav-item">
-                    <Link className="nav-link active custom-link" to="/delivery">
-                        Доставка и оплата
-                    </Link><
-                /li>
 
                 <HeaderSearch/>
 
