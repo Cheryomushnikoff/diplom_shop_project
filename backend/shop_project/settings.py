@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-iv6%dvznsix&tvwphgwp8+6=z&^xneym5j6h(m59)fcdr&($ac
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["89.111.170.172", "localhost", "127.0.0.1", "127.0.0.1:8000"]
 
 
 # Application definition
@@ -122,7 +122,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
-
+STATIC_ROOT = BASE_DIR / 'staticfiles/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
 
@@ -246,11 +246,7 @@ YOOKASSA_SHOP_ID = "1271978"
 YOOKASSA_SECRET_KEY = "test_VrE7HJSZ7ubHv6Cbyw0X9ZM4C6S4-qevsSxPCXbEX10"
 YOOKASSA_SANDBOX = True
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    ".ngrok-free.dev",
-]
+
 
 
 
