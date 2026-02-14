@@ -43,7 +43,7 @@ export default function Products() {
         cartItems.find((item) => item.id === product.id);
 
     return (
-        <div className="products-container py-4">
+        <div className="products-container pb-2 mt-4">
             <h2 className="text-center mb-4">
                 {query ? `Результаты по: "${query}"` : "Товары"}
             </h2>

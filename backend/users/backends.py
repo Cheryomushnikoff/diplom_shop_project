@@ -15,7 +15,7 @@ class EmailOrPhoneBackend(ModelBackend):
         # Ищем по email
         if '@' in username:
             try:
-                user = User.objects.get(email=username)
+                user = User.objects.get(email__iexact=username.lower())
             except User.DoesNotExist:
                 return None
         else:

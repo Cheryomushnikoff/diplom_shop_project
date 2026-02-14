@@ -11,4 +11,7 @@
   transform: translateY(0);
   pointer-events: auto;
 }
+.container {
+    margin-top: 50px !important;
+}
 

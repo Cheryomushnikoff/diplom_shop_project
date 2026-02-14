@@ -2,7 +2,7 @@ export default function DeliveryPage() {
     return (
         <div className="container my-5">
 
-            <h2 className="mb-4">Доставка и оплата</h2>
+            <h2 className="mb-5">Доставка и оплата</h2>
 
             <div className="card shadow-sm mb-4 p-4">
                 <h4 className="mb-3">💳 Оплата</h4>

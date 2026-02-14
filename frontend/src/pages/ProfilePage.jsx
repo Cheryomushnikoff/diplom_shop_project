@@ -28,6 +28,18 @@ export default function ProfilePage() {
     const [passwordData, setPasswordData] = useState({old_password: "", new_password: "", confirm_password: ""});
     const [passwordMessage, setPasswordMessage] = useState("");
     const {logoutUser, user, setUser} = useMainContext()
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 450)
+
+    // Обновление состояния при изменении размеров экрана
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 450);
+
+        };
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
 
 
     // Получение профиля
@@ -90,21 +102,22 @@ export default function ProfilePage() {
 
     return (
         <div className="container my-5">
-            <h2 className="mb-4">Профиль пользователя</h2>
-            <ul className="nav nav-tabs mb-4">
+            <h2 className="mb-4">Личный кабинет</h2>
+            <ul className="nav nav-tabs mb-4 justify-content-evenly">
                 <li className="nav-item">
-                    <button className={`nav-link ${activeTab === "profile" ? "active" : ""}`}
-                            onClick={() => setActiveTab("profile")}>Редактировать профиль
+                    <button className={`nav-link ${ isMobile && 'px-2'} ${activeTab === "profile" ? "active" : ""}`}
+                            onClick={() => setActiveTab("profile")}>
+                        { isMobile ? 'Профиль' : 'Информация профиля'}
                     </button>
                 </li>
                 <li className="nav-item">
-                    <button className={`nav-link ${activeTab === "orders" ? "active" : ""}`}
-                            onClick={() => setActiveTab("orders")}>История заказов
+                    <button className={`nav-link ${ isMobile && 'px-2'} ${activeTab === "orders" ? "active" : ""}`}
+                            onClick={() => setActiveTab("orders")}>Мои заказы
                     </button>
                 </li>
                 <li className="nav-item">
-                    <button className={`nav-link ${activeTab === "password" ? "active" : ""}`}
-                            onClick={() => setActiveTab("password")}>Сменить пароль
+                    <button className={`nav-link ${ isMobile && 'px-2'} ${activeTab === "password" ? "active" : ""}`}
+                            onClick={() => setActiveTab("password")}> Смена пароля
                     </button>
                 </li>
             </ul>

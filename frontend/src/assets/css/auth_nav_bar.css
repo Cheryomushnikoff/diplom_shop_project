@@ -14,15 +14,22 @@
 }
 
 #authDesktop {
-    margin-left: 0.4rem;
+    width: 35%;
+    max-width: 295px;
+    min-width: 285px;
+
+    /*margin-left: 0.4rem;*/
     display: none;
 }
 
 #authMobile {
-    margin-left: 0.4rem;
+    /*margin-left: 0.4rem;*/
 }
 
 /*убрать треугольник у заглавия выпадающего списка*/
 .dropdown-toggle::after {
     display:none
+}
+.userSpan {
+    margin-right: 10px !important;
 }
