@@ -104,4 +104,9 @@ input[type=number] {
     z-index: 100000000 !important;
 }
 
+header {
+    position: relative;
+    z-index: 100000000000000000 !important;
+}
+
 
