@@ -19,7 +19,7 @@ ALLOWED_HOSTS = [
     "89.111.170.172",
     "localhost",
     "127.0.0.1",
-    "beads-shop.ru"
+    "beads-shop.ru",
     "www.beads-shop.ru"
 ]
 
