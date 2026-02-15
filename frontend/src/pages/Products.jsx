@@ -73,11 +73,11 @@ export default function Products() {
                                 className="container-item shadow-sm position-relative p-3"
                                 key={p.id}
                             >
-                                {p.is_popular && (
-                                    <span className="position-absolute top-0 start-0 badge bg-warning text-dark">
-                    Популярное
-                  </span>
-                                )}
+                  {/*              {p.is_popular && (*/}
+                  {/*                  <span className="position-absolute top-0 start-0 badge bg-warning text-dark">*/}
+                  {/*  Популярное*/}
+                  {/*</span>*/}
+                  {/*              )}*/}
 
                                 <Link to={`/products/${p.slug}`}>
                                     <img
@@ -87,12 +87,14 @@ export default function Products() {
                                     />
                                 </Link>
 
-                                <Link
+                                <div className='spec text-center'>
+                                    <Link
                                     to={`/products/${p.slug}`}
-                                    className="text-dark text-decoration-none mb-1"
-                                >
-                                    <strong>{p.name}</strong>
-                                </Link>
+                                    className="text-dark text-decoration-none mb-1 text-center"
+                                    >
+                                        <strong>{p.name}</strong>
+                                    </Link>
+                                </div>
 
                                 <div className="small mb-2">
                   <span className="text-warning me-1">

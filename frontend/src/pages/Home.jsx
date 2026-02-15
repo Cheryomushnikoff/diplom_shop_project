@@ -46,8 +46,11 @@ export default function Home() {
                         const cartItem = cartItems.find((p) => p.id === product.id);
 
                         return (
-                            <div className="col-md-3" key={product.id}>
-                                <div className="card h-100 shadow-sm">
+                            <div
+                                className="col-md-3 "
+                                key={product.id}
+                            >
+                                <div className="card h-100 shadow-sm container-item shadow-sm position-relative p-3 text-center">
 
                                     <Link to={`/products/${product.slug}`}>
                                         <img
@@ -72,13 +75,15 @@ export default function Home() {
                                             {"★".repeat(Math.round(product.average_rating))}
                                             {"☆".repeat(5 - Math.round(product.average_rating))}
                                             <span className="text-dark ms-1">
-                        ({product.average_rating.toFixed(1)})
-                      </span>
+                                                 ({product.average_rating.toFixed(1)})
+                                            </span>
                                         </div>
 
                                         <div className="text-muted small mb-2">
                                             {product.reviews_count} отзыв
-                                            {product.reviews_count === 1 ? "" : "ов"}
+                                            { (product.reviews_count > 9 && product.reviews_count < 21 ) || [5, 7, 8, 9].includes(product.reviews_count % 10) ?
+                                                "ов" : product.reviews_count % 10 === 1 ? "" : "а"
+                                            }
                                         </div>
 
 
