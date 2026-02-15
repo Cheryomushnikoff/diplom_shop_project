@@ -23,6 +23,8 @@ ALLOWED_HOSTS = [
     "www.beads-shop.ru"
 ]
 
+CSRF_TRUSTED_ORIGINS = ['https://beads-shop.ru', 'https://www.beads-shop.ru']
+
 
 # Application definition
 
