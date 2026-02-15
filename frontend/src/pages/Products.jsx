@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {use, useEffect, useState} from "react";
 import {Link, useSearchParams} from "react-router-dom";
 import {useMainContext} from "./MainContext.jsx";
 
@@ -6,16 +6,21 @@ export default function Products() {
     const [products, setProducts] = useState([]);
     const {addToCart, cartItems, setQty} = useMainContext();
     const [searchParams] = useSearchParams();
-    const categories = {
-        seriozhki: 'Серёжки',
-        braslet: 'Браслет',
-        ozherele: 'Ожерелье',
-        portupeia: 'Портупея',
-        kuolony: 'Кулоны',
-        koltsa: 'Кольца'
+    const [categories, setCategories] = useState([]);
 
 
-    }
+       useEffect(() => {
+        fetch("/api/category/")
+        .then((res) => res.json())
+        .then((data) => {
+            const obj = {};
+            data.forEach((elem) => obj[elem.slug] = elem.name)
+            setCategories(obj)
+        })
+        .catch(console.error);
+    }, []);
+
+
 
     const query = searchParams.get("q") || "";
     const selectedCategories = searchParams.getAll("category"); // массив строк
