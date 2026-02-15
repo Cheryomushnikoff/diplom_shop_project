@@ -183,12 +183,12 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
 }
 
-#  Yandex SMTP
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#
-# ADMINS = [
-#     ("Admin", "cheremushnikoff@yandex.ru"),
-# ]
+ # Yandex SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+ADMINS = [
+    ("Admin", "cheremushnikoff@yandex.ru"),
+]
 
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 587
