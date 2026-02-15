@@ -18,7 +18,7 @@ export default function MiniCart({anchorRef, onClose}) {
         const width = 320;
         const gap = 8;
 
-        let left = rect.right - width;
+        let left = rect.right - width + 15;
         if (left < gap) left = gap;
         if (left + width > window.innerWidth) {
             left = window.innerWidth - width - gap;

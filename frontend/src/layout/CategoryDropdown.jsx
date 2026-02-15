@@ -25,7 +25,7 @@ export default function CategoryDropdown({anchorRef, onClose}) {
         const rect = anchorRef.current.getBoundingClientRect();
         setPos({
             top: rect.bottom + 8,
-            left: rect.left,
+            left: rect.left - 26,
         });
     }, [anchorRef]);
 
