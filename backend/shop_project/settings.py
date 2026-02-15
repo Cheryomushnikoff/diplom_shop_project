@@ -19,7 +19,6 @@ ALLOWED_HOSTS = [
     "89.111.170.172",
     "localhost",
     "127.0.0.1",
-    "127.0.0.1:8000",
     "beads-shop.ru"
     "www.beads-shop.ru"
 ]
@@ -143,7 +142,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
-STATIC_ROOT = BASE_DIR / 'staticfiles/'
+
+STATIC_ROOT = BASE_DIR / 'static/'
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
@@ -183,6 +183,10 @@ SIMPLE_JWT = {
 
 #  Yandex SMTP
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+ADMINS = [
+    ("Admin", "cheremushnikoff@yandex.ru"),
+]
 
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 587
@@ -258,9 +262,6 @@ JAZZMIN_UI_TWEAKS = {
     },
 }
 
-ADMINS = [
-    ("Admin", "cheremushnikoff@yandex.ru"),
-]
 
 DEFAULT_FROM_EMAIL = "cheremushnikoff@yandex.ru"
 
