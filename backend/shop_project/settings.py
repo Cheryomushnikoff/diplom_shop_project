@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'users',
+    'users.apps.UsersConfig',
     "store.apps.StoreConfig",
     "payments",
 
@@ -57,6 +57,7 @@ MIDDLEWARE = [
     # "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -284,6 +285,14 @@ YOOKASSA_SECRET_KEY = "test_VrE7HJSZ7ubHv6Cbyw0X9ZM4C6S4-qevsSxPCXbEX10"
 YOOKASSA_SANDBOX = True
 
 
+LANGUAGE_CODE = 'ru'
 
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
 
+LANGUAGES = [
+    ('ru', 'Russian'),
+    ('en', 'English'),
+]
 

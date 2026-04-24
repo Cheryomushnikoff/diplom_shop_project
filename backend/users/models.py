@@ -7,20 +7,20 @@ from django.conf import settings
 from .managers import UserManager
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=20, unique=True, blank=True, null=True)
+    email = models.EmailField(unique=True, verbose_name="Эл. почта")
+    phone = models.CharField(max_length=20, unique=True, blank=True, null=True, verbose_name="Моб. тел.")
 
-    address = models.CharField(max_length=500, blank=True)
+    address = models.CharField(max_length=500, blank=True, verbose_name="Адрес")
 
-    first_name = models.CharField(max_length=200,blank=True, null=True)
-    last_name = models.CharField(max_length=200, blank=True, null=True)
-    second_name = models.CharField(max_length=200, blank=True, null=True)
+    first_name = models.CharField(max_length=200,blank=True, null=True, verbose_name="Имя")
+    last_name = models.CharField(max_length=200, blank=True, null=True, verbose_name="Фамилия")
+    second_name = models.CharField(max_length=200, blank=True, null=True, verbose_name="Отчество")
 
-    is_active = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(default=timezone.now)
+    is_active = models.BooleanField(default=False, verbose_name="Активирован")
+    is_staff = models.BooleanField(default=False, verbose_name="Персонал")
+    date_joined = models.DateTimeField(default=timezone.now, verbose_name="Дата регистрации")
 
-    subscribed_to_newsletter = models.BooleanField(default=False)
+    subscribed_to_newsletter = models.BooleanField(default=False, verbose_name="Подписка на новости")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

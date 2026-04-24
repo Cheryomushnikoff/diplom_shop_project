@@ -4,24 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aaa0b7e1-1d40-4592-8465-675d8c6ed200" name="Changes" comment="Реструктурировал проект, разделил на фронт и бэк, установаил реакт">
-      <change afterPath="$PROJECT_DIR$/frontend/src/Cart.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Products.jsx" afterDir="false" />
+    <list default="true" id="aaa0b7e1-1d40-4592-8465-675d8c6ed200" name="Changes" comment="Применил миграции для админки">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/static/css/core.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/static/css/core.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/static/react/assets/main-Bty4G45y.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/static/react/assets/react-CHdo91hT.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/static/react/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/static/react/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/store/api_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/store/api_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/store/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/store/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/store/templates/store/product_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/store/templates/store/product_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/store/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/store/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/store/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/store/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/vite.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/shop_project/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/shop_project/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/users/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/users/models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,29 +38,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/diplom_shop_project/static&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;D:\\PyCharm 2025.2.0.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "django.template.preview.state": "SHOW_EDITOR",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/diplom_shop_project/static",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "D:\\PyCharm 2025.2.0.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\diplom_shop_project\static" />
@@ -464,7 +450,15 @@
       <option name="project" value="LOCAL" />
       <updated>1768392969232</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Применил миграции для админки">
+      <option name="closed" value="true" />
+      <created>1777036235942</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1777036235942</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -482,7 +476,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="создал приложение Магазин" />
     <MESSAGE value="Подключил приложение Магазин к проекту;&#10;Создал базовый шаблон,&#10;Создадл представление и шаблон главной страницы" />
     <MESSAGE value="Добавил стили для навигационного меню" />
     <MESSAGE value="Центрирование на главной странице" />
@@ -507,7 +500,8 @@
     <MESSAGE value="добавил медиафайлы в гитигнор" />
     <MESSAGE value="Осцществил миграции для модели корзины и элемента корзины" />
     <MESSAGE value="Реструктурировал проект, разделил на фронт и бэк, установаил реакт" />
-    <option name="LAST_COMMIT_MESSAGE" value="Реструктурировал проект, разделил на фронт и бэк, установаил реакт" />
+    <MESSAGE value="Применил миграции для админки" />
+    <option name="LAST_COMMIT_MESSAGE" value="Применил миграции для админки" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
