@@ -4,8 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aaa0b7e1-1d40-4592-8465-675d8c6ed200" name="Changes" comment="Последние изменения для деплоя и админки">
-      <change beforePath="$PROJECT_DIR$/backend/store/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/store/models.py" afterDir="false" />
+    <list default="true" id="aaa0b7e1-1d40-4592-8465-675d8c6ed200" name="Changes" comment="Реструктурировал проект, разделил на фронт и бэк, установаил реакт">
+      <change afterPath="$PROJECT_DIR$/frontend/src/Cart.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/Products.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/static/css/core.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/static/css/core.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/static/react/assets/main-Bty4G45y.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/static/react/assets/react-CHdo91hT.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/static/react/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/static/react/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/store/api_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/store/api_views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/store/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/store/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/store/templates/store/product_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/backend/store/templates/store/product_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/store/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/store/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/store/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/store/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/vite.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,20 +43,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="RESET_MODE" value="HARD" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;Cheryomushnikoff&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Cheryomushnikoff/diplom_shop_project.git&quot;,
-    &quot;accountId&quot;: &quot;19534903-cb87-4593-be20-c18a212f855b&quot;
-  }
-}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -58,7 +61,7 @@
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/diplom_shop_project/static&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
@@ -156,13 +159,38 @@
       <workItem from="1768391598941" duration="11405000" />
       <workItem from="1768406437854" duration="1725000" />
       <workItem from="1768451077061" duration="5599000" />
-      <workItem from="1771043926554" duration="9756000" />
-      <workItem from="1771058664502" duration="2424000" />
-      <workItem from="1771167402648" duration="9274000" />
-      <workItem from="1771181792627" duration="6273000" />
-      <workItem from="1776757114810" duration="929000" />
-      <workItem from="1776853097040" duration="8368000" />
-      <workItem from="1777033999621" duration="1535000" />
+    </task>
+    <task id="LOCAL-00001" summary="Создал проект интернет магазина, добавил приложение пользователя">
+      <option name="closed" value="true" />
+      <created>1764405807813</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1764405807813</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Создал(models.py) и подключил(settings.py) кастомную модель пользователя">
+      <option name="closed" value="true" />
+      <created>1764405923582</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1764405923582</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Создал(models.py, managers.py) и подключил(settings.py) кастомную модель пользователя">
+      <option name="closed" value="true" />
+      <created>1764405968917</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1764405968917</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Создал(models.py, managers.py) и подключил(settings.py) кастомную модель пользователя">
+      <option name="closed" value="true" />
+      <created>1764405979506</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1764405979506</updated>
     </task>
     <task id="LOCAL-00005" summary="Создал(models.py, managers.py) и подключил(settings.py) кастомную модель пользователя(отсутствие поля username, использование email в качестве логина)">
       <option name="closed" value="true" />
@@ -436,127 +464,7 @@
       <option name="project" value="LOCAL" />
       <updated>1768392969232</updated>
     </task>
-    <task id="LOCAL-00039" summary="заменил psycopg2-binary==2.9.9">
-      <option name="closed" value="true" />
-      <created>1771044259232</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1771044259232</updated>
-    </task>
-    <task id="LOCAL-00040" summary="заменил psycopg2-binary==2.9.9">
-      <option name="closed" value="true" />
-      <created>1771045152773</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1771045152773</updated>
-    </task>
-    <task id="LOCAL-00041" summary="исправил опечатку">
-      <option name="closed" value="true" />
-      <created>1771045516182</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1771045516182</updated>
-    </task>
-    <task id="LOCAL-00042" summary="Подкорректировал для мобилок">
-      <option name="closed" value="true" />
-      <created>1771048800850</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1771048800850</updated>
-    </task>
-    <task id="LOCAL-00043" summary="для деплоя">
-      <option name="closed" value="true" />
-      <created>1771058818530</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1771058818530</updated>
-    </task>
-    <task id="LOCAL-00044" summary="для деплоя">
-      <option name="closed" value="true" />
-      <created>1771170451114</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1771170451114</updated>
-    </task>
-    <task id="LOCAL-00045" summary="доработал вывод категорий при поиске">
-      <option name="closed" value="true" />
-      <created>1771174686991</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1771174686991</updated>
-    </task>
-    <task id="LOCAL-00046" summary="выровнял положение выпадающих меню: категорий и корзины">
-      <option name="closed" value="true" />
-      <created>1771175223617</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1771175223617</updated>
-    </task>
-    <task id="LOCAL-00047" summary="Отредактировал внешний вид товаров">
-      <option name="closed" value="true" />
-      <created>1771177944764</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1771177944764</updated>
-    </task>
-    <task id="LOCAL-00048" summary="Для деплоя">
-      <option name="closed" value="true" />
-      <created>1771178188713</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1771178188713</updated>
-    </task>
-    <task id="LOCAL-00049" summary="Для деплоя">
-      <option name="closed" value="true" />
-      <created>1771181810139</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1771181810139</updated>
-    </task>
-    <task id="LOCAL-00050" summary="Для деплоя">
-      <option name="closed" value="true" />
-      <created>1771182628001</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1771182628001</updated>
-    </task>
-    <task id="LOCAL-00051" summary="Для деплоя">
-      <option name="closed" value="true" />
-      <created>1771183460285</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1771183460285</updated>
-    </task>
-    <task id="LOCAL-00052" summary="Настройки SMTP">
-      <option name="closed" value="true" />
-      <created>1771185456312</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1771185456312</updated>
-    </task>
-    <task id="LOCAL-00053" summary="Последние изменения для деплоя и админки">
-      <option name="closed" value="true" />
-      <created>1777035180553</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1777035180553</updated>
-    </task>
-    <option name="localTasksCounter" value="54" />
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -567,25 +475,23 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="main" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="создал приложение Магазин" />
+    <MESSAGE value="Подключил приложение Магазин к проекту;&#10;Создал базовый шаблон,&#10;Создадл представление и шаблон главной страницы" />
+    <MESSAGE value="Добавил стили для навигационного меню" />
+    <MESSAGE value="Центрирование на главной странице" />
+    <MESSAGE value="Добавил скрипты js для адаптивного навигационного меню, для выдвигающегося импута формы поиска по товарам" />
+    <MESSAGE value="TODO в гитигнор" />
+    <MESSAGE value="обновил обязательные зависимости" />
+    <MESSAGE value="Создал модель категорий и продуктов" />
+    <MESSAGE value="Применил миграции, зарегистрировал модели в админке" />
+    <MESSAGE value="Создал вьюшку, шаблон, и ссылку в базовом шаблоне для отображения каталога товаров" />
     <MESSAGE value="Создал путь, вьюшку, шаблон, и ссылку в базовом шаблоне для отображения каталога товаров" />
     <MESSAGE value="Создал путь, вьюшку, шаблон, и ссылку в базовом шаблоне для формы регистрации" />
     <MESSAGE value="Шаблон формы" />
@@ -601,16 +507,16 @@
     <MESSAGE value="добавил медиафайлы в гитигнор" />
     <MESSAGE value="Осцществил миграции для модели корзины и элемента корзины" />
     <MESSAGE value="Реструктурировал проект, разделил на фронт и бэк, установаил реакт" />
-    <MESSAGE value="заменил psycopg2-binary==2.9.9" />
-    <MESSAGE value="исправил опечатку" />
-    <MESSAGE value="Подкорректировал для мобилок" />
-    <MESSAGE value="для деплоя" />
-    <MESSAGE value="доработал вывод категорий при поиске" />
-    <MESSAGE value="выровнял положение выпадающих меню: категорий и корзины" />
-    <MESSAGE value="Отредактировал внешний вид товаров" />
-    <MESSAGE value="Для деплоя" />
-    <MESSAGE value="Настройки SMTP" />
-    <MESSAGE value="Последние изменения для деплоя и админки" />
-    <option name="LAST_COMMIT_MESSAGE" value="Последние изменения для деплоя и админки" />
+    <option name="LAST_COMMIT_MESSAGE" value="Реструктурировал проект, разделил на фронт и бэк, установаил реакт" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/frontend/src/App.jsx</url>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
