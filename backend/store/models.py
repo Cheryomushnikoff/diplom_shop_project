@@ -9,9 +9,9 @@ from datetime import datetime
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=200, unique=True)
-    image = models.ImageField(upload_to='category/')
-    slug = models.SlugField(unique=True, editable=False, )
+    name = models.CharField(max_length=200, unique=True, verbose_name='Наименование')
+    image = models.ImageField(upload_to='category/', verbose_name='Изображение')
+    slug = models.SlugField(unique=True, editable=False, verbose_name='Слаг')
 
     class Meta:
         verbose_name = 'Категория'
@@ -26,14 +26,14 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=200, unique=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
-    slug = models.SlugField(unique=True, editable=False)
-    description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='products/')
-    in_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    name = models.CharField(max_length=200, unique=True, verbose_name='Наименование')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', verbose_name='Категория')
+    slug = models.SlugField(unique=True, editable=False, verbose_name='Слаг')
+    description = models.TextField(blank=True, verbose_name="Описание")
+    image = models.ImageField(upload_to='products/', verbose_name="Изображение")
+    in_active = models.BooleanField(default=True, verbose_name="Активирован")
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, verbose_name="Создан")
 
     class Meta:
         verbose_name = 'Товар'
@@ -53,16 +53,18 @@ class Cart(models.Model):
         related_name='cart',
         on_delete=models.CASCADE,
         null=True,
-        blank=True
+        blank=True,
+        verbose_name="Пользователь"
     )
 
     session_key = models.CharField(
         max_length=40,
         null=True,
-        blank=True
+        blank=True,
+        verbose_name="Ключ сессии"
     )
 
-    update_at = models.DateTimeField(auto_now=True)
+    update_at = models.DateTimeField(auto_now=True, verbose_name="Обновлен")
 
     class Meta:
         verbose_name = 'Корзина'
@@ -70,14 +72,14 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items', verbose_name="Корзина")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Товар")
+    quantity = models.PositiveIntegerField(default=1, verbose_name="Количество")
 
     class Meta:
         unique_together = ("cart", "product")
-        verbose_name= 'Элемент'
-        verbose_name_plural = 'Элементы'
+        verbose_name= 'Элемент корзины'
+        verbose_name_plural = 'Элементы корзины'
 
     def get_total_price(self):
         return self.product.price * self.quantity
@@ -105,28 +107,36 @@ class Order(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
-        blank=True
+        blank=True,
+        verbose_name="Пользователь"
     )
 
-    first_name = models.CharField(max_length=200, blank=True)
-    last_name = models.CharField(max_length=200, blank=True)
-    email = models.EmailField()
-    phone = models.CharField(max_length=30)
-    address = models.CharField(max_length=500)
+    first_name = models.CharField(max_length=200, blank=True, verbose_name="Имя")
+    last_name = models.CharField(max_length=200, blank=True, verbose_name="Фамилия")
+    email = models.EmailField(verbose_name="Эл. почта")
+    phone = models.CharField(max_length=30, verbose_name="Моб. тел.")
+    address = models.CharField(max_length=500, verbose_name="Адрес")
 
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default=STATUS_NEW,
+        verbose_name = "Статус"
     )
 
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Полная цена")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создан")
     payment_id = models.CharField(
         max_length=255,
         blank=True,
         null=True,
+        verbose_name = "Ключ оплаты"
     )
+
+    class Meta:
+        verbose_name= 'Заказ'
+        verbose_name_plural = 'Заказы'
+
     def __str__(self):
         return f"Заказ #{self.id}"
 
@@ -142,6 +152,11 @@ class OrderItem(models.Model):
 
     def get_total(self):
         return self.price * self.quantity
+
+    class Meta:
+        unique_together = ("cart", "product")
+        verbose_name= 'Элемент заказа'
+        verbose_name_plural = 'Элементы заказа'
 
 class Review(models.Model):
     product = models.ForeignKey(
@@ -161,6 +176,8 @@ class Review(models.Model):
 
     class Meta:
         unique_together = ("product", "user")  # 1 отзыв на товар
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
 
     def __str__(self):
         return f"{self.product} — {self.rating}"
