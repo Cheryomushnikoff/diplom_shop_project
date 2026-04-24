@@ -104,3 +104,12 @@ cd frontend
 npm install
 npm run dev
 ```
+
+## Ссылка на гитхаб
+```
+https://github.com/Cheryomushnikoff/diplom_shop_project
+```
+
+## Ссылка на сайт
+```
+https://beads-shop.ru
